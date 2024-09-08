@@ -1,5 +1,4 @@
 = Organization
-
 L'organizzazione è un'account condiviso da più utenti dove è possibile collaborare su uno o più progetti, definendo ruoli e funzioni.
 Utilizzando le organizzazioni è possibile creare una suddivisione che rispecchia quella in classe, dove il *Working group coordinator* ha tutti i permessi 
 i *Git Maintainer* possono creare, modificare, accettare, rifiutare le pull request e scrivere ed eseguire delle Actions (di cui parleremo più avanti) e tutti gli altri possono aprire issue, fare fork e creare delle pull request.
@@ -16,13 +15,29 @@ Per creare i gtuppi, cambiate dal vostro account a quello dell'organizzazione, s
 - Tutors
 
 === Organization Owners
-Composto dal Working group coordinator e dai GitMaintainers, questo gruppo *deve avere tutti i permessi*, i membri di questo gruppo devono essere manualmente 
-impostati come Owners dell'organizzazione andando su people, cliccando sui tre pallini e poi su cambia ruolo. In questo modo, avranno pieni poteri su tutta l'organizzazione.
+Composto dal Working group coordinator e dai Git Maintainers, questo gruppo *deve avere tutti i permessi*, i membri di questo gruppo devono essere manualmente 
+impostati come Owners dell'organizzazione andando su *people*, cliccando sui *tre pallini* e poi su *cambia ruolo* e in fine *owner*. In questo modo, avranno pieni poteri su tutta l'organizzazione.
 
 === Members
 Questo gruppo, deve poter forkare, creare issue e pull request sul repository del common crate, il ruolo da associarvi è Triage ma solo sul singolo repository 
 dopo vi spiegheremo come fare, per ora create il gruppo e non aggiungete membri, visto che sarete in \~100/150 persone è impensabile che qualcuno aggiunaga manualmente tutti i partecipanti, per questo si userà l'inviter, come spiegato successivamente.
 
 === Tutors
-Questo gruppo avrà acesso in lettura al repository, conterra i tutors i quali andranno aggiunti manualmente in base al loro interesse, alcuni vi chiederanno di esserci e altri invece no. Anche qui, il i permessi del gruppo vanno impostati sul singolo repository.
+Questo gruppo avrà acesso in lettura al repository, conterra i tutors i quali andranno aggiunti manualmente in base al loro interesse, alcuni vi chiederanno di entrare e altri invece no, anche qui, il i permessi del gruppo vanno impostati sul singolo repository.
+
+== Il repository
+Create adesso il repository contenente il codice del Common Crate, come visibilità mettete private (il professore vi spiegherà che è per evitare che i futuri studenti trovino tutto pronto), le altre opzioni sceglietele in base 
+alle vostre preferenze. Una volta creato andate in *impostazioni*, poi *collaboratori e teams* e cliccate *aggiungi teams*, cercate *Organization Owners* e come ruolo assegnategli *Admin*. Ripetete per i *Members* e come ruolo 
+scegliete *Triage*, per ultimo il gruppo *Tutors* ai quali va il ruolo di *Read*.
+
+== Workflow consigliato
+Lo scorso anno, abbiamo provato a mimare l'approccio utilizzato dai grandi progetti open source per la gestione dei repository, questo cosisteva nelle seguenti fasi
++ Apertura di una issue
++ Votazione (se si tratta di una feature proposta)
++ Fork del repository
++ implentazione
++ Apertura di una pull request associata alla issue
++ Revisione
++ Merge nel main
++ Pubblicazione della nuova versione
 

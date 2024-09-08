@@ -1,0 +1,13 @@
+services:
+  typst-runner:
+    image: typst-runner:latest
+    build:
+      context: .
+    container_name: typst-runner
+    restart: always
+    environment:
+      # Configura questi valori con le tue informazioni GitHub
+      REPO_URL: "https://github.com/Toniolo-Marco/git-for-dummies"
+      RUNNER_NAME: "typst-runner"
+      RUNNER_TOKEN: ""
+      # ORG_RUNNER: true
