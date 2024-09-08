@@ -1,10 +1,36 @@
+#import "@preview/fletcher:0.5.1" as fletcher: diagram, node, edge, shapes
+
+#set text(10pt)
+#diagram(
+  node-stroke: .1em,
+  node-fill: gradient.radial(blue.lighten(80%), blue, center: (30%, 20%), radius: 80%),
+  spacing: 4em,
+  edge((-1,0), "r", "-|>", `branch`, label-pos: 0, label-side: center),
+  node((0,0), `A`, radius: 1.5em),
+  edge(`modifiche`, "-|>"),
+  node((1,0), `B`, radius: 1.5em),
+  
+)
+
 = Git basics
 == Introduzione
 
 Git è il sistema di versionamento distribuito più utilizzato al mondo. Serve a gestire e tracciare modifiche al codice sorgente nei progetti di sviluppo software. 
 È uno strumento fondamentale per coordinare il lavoro tra più sviluppatori, mantenendo uno storico delle modifiche effettuate. In questo modo evitiamo di avere sparse diverse versioni del nostro progetto: _"finale" "finale-finale" "ultima-versione-finale"_ ecc...
 
-== Funzionamento in Locale
+Per ottenere questi risultati, Git utilizza diversi concetti e tecnologie: repository, commit, branch, merge, pull, push, moduli, sotto-moduli, tag, ed altri. In questo documento vedremo i concetti base per iniziare ad utilizzare Git.
+
+In generale possiamo vedere il versionamento come un albero, dove ogni branch, come si evince dal nome, è un ramo di questo albero. A sua volta ogni branch è composto da commit, nodi che rappresentano uno step (o stato) del progetto. 
+
+== Commit
+
+Un commit è un'istantanea del codice in un determinato momento, generalmente ha questi attributi: 
+- hash identificativo univoco
+- messaggio che descrive le modifiche apportate
+- autore (e-mail e nome), co-autori
+- data e ora del commit
+
+Ogni #link("https://git-scm.com/docs/git-commit")[commit] è collegato al precedente, e differisce da esso per le modifiche apportate. Questo ciclo di modifiche e commit è alla base di Git.
 
 Sulla nostra macchina, git, per versionare correttamente i nostri file utilizza concettualmente diversi stati.#footnote([Per approfondimenti visitare https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository])
 
@@ -24,7 +50,14 @@ Esaminiamo gli stati:
 
 Esaminiamo le azioni:
 
-- *Commit*: Un commit rappresenta uno step, nel quale tutti i file sono ad una certa versione. Supponiamo per esempio di dover correggere un libro: potrebbe essere una buona strategia raggruppare tutte le correzioni di un capitolo all'intero di un commit: ovvero ad ogni step del completamento della task.  È possibile ovviamente manipolare (parzialmente) questi commit e viaggiare tra loro, successivamente vedremo come.
+#grid(columns: (1fr,1fr),
+    [
+    - *Commit*: Un commit rappresenta uno step, nel quale tutti i file sono ad una certa versione. Supponiamo per esempio di dover correggere un libro: potrebbe essere una buona strategia raggruppare tutte le correzioni di un capitolo all'intero di un commit: ovvero ad ogni step del completamento della task.  È possibile ovviamente manipolare (parzialmente) questi commit e viaggiare tra loro, successivamente vedremo come.
+
+    ], 
+    []
+    
+)
 
 - *Edit the file*: Ad ogni commit tutti i file inclusi verrano letti da git come *Unmodified* e ricomincerà questo "ciclo". Editare un file, o crearlo significa portarlo allo stato *Modified*.
 
@@ -32,7 +65,95 @@ Esaminiamo le azioni:
 
 - *Add/Remove the file*: È ovviamente possibile aggiungere o rimuovere file dalla working directory, per far si che un nuovo file sia versionato da git si utilizza lo stesso comando che si utilizza per portarlo da *modified* a *staged*, ovvero `git add <file_name>`. Quando invece si rimuove un file precedentemente versionato, git automaticamente sarà in grado di notarlo e gestirlo.
 
-== Configurare Git
+== Branch
+
+I branch sono utilizzati per lavorare su funzionalità diverse o bugfix separati dal ramo principale (`main` o `master`). Attraverso L'uso dei branch oltre che mantenere una corretta organizzazione del progetto, ci permette di lavorare in parallelo su più funzionalità senza interferire con il lavoro degli altri membri del team.
+
+I branch possono essere creati, rinominati, spostati, uniti (_merge_) e cancellati. Il merge come si può intuire è un'operazione chiave, che permette di unire le funzionalità sviluppate in due branch diversi in uno solo, o di portare le modifiche di un branch nel branch principale.
+
+Il flusso di lavoro più comune è il seguente:
+
+// #let zstack(..args) = style(styles => {
+//     let width = 0pt
+//     let height = 0pt
+//     for item in args.pos() {
+//         let size = measure(item, styles)
+//         width = calc.max(width, size.width)
+//         height = calc.max(height, size.height)
+//     }
+//     block(width: width, height: height, {
+//         for item in args.pos() {
+//             place(center + horizon, item)
+//         }
+//     })
+// })
+
+// #let commit(color, out_radius, inner_color, inner_radius) = {
+//     let out_margin = 2.5pt
+//     let middle_radius = out_radius - out_margin
+
+//     zstack(
+//         // Outer circle
+//         circle(fill: color, radius: out_radius),
+
+//         // White inside
+//         circle(fill: white, radius: middle_radius),
+        
+//         // Inner circle
+//         circle(fill: inner_color, radius: inner_radius)
+//     )
+// }
+
+
+// #let commit_r(commit) = {
+//     // make the line between commits
+//     zstack(
+//         commit,
+//         line()
+//     )
+// }
+
+// #commit_r(commit(red,10pt,red, 2.5pt))
+    
+
+// #let branch(color, name, spacing, commit_list) = {
+//     stack(
+//         dir: ltr,
+//         spacing: spacing,
+//         box(fill: color, radius: 5pt, inset: 5pt, baseline: 50%)[
+//             #text(name, size: 7pt, weight: "light", tracking: 0.5pt)
+//         ],
+
+        
+//         if commit_list.len() >= 1 [#commit_list.remove(0)],
+
+//         if commit_list.len() >=1{
+//             while commit_list.len() > 0{
+//                 // manage last commit
+//                 if commit_list.len() == 1[
+//                     "asd"],
+
+//                 // manage initial commit
+//                 let c = commit_list.remove(0)
+//                 [line()]
+//             }
+//         } else [commit_list.remove(0)] //manage a single commit
+        
+//     )
+// }
+
+// #let commit_list = (commit(red,10pt,red, 2.5pt),commit(red,10pt,red, 2.5pt),commit(red,10pt,red, 2.5pt),commit(red,10pt,red, 2.5pt))
+
+
+// #branch(red, "main", 10pt, commit_list)
+
+
+
+
+
+== Pratica
+
+=== Configurare Git
 Prima di iniziare a utilizzare Git, è importante configurare il proprio nome utente e l'indirizzo email, poiché questi saranno associati ai tuoi commit.
 
 ```bash
@@ -71,9 +192,6 @@ Questo passaggio richiede l'aver già creato l'organizzazione alla quale apparte
     ```
 
     Il primo comando crea un file chiamato README.md, se non esiste già e aggiunge la stringa "\# titolo" al suo contenuto. (Il simbolo "\#" in Markdown indica un titolo). Gli altri comandi verranno spiegati nei prossimi capitoli.
-
-
-
 
 == Staging Area
 
@@ -321,15 +439,3 @@ Se hai bisogno di recuperare un commit cancellato o navigare nella cronologia de
 ```bash
 git reflog
 ```
-
-
-== Repository
-
-Git è basato sulle repository, per inizializzarne una è sufficiente navigare all'interno della 
-
-
-
-=== Commit
-
-I commit sono tutti i singoli step che decidiamo di memorizzare nel nostro su git.
-
