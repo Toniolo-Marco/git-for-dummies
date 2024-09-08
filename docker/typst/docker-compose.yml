@@ -10,5 +10,5 @@ services:
     environment:
       - RUNNER_MANAGER_TOKEN=
       - RUNNER_NAME=typst-runner
-      - REPO_OWNER=
+      - REPO_OWNER=Toniolo-Marco
       - REPO_NAME=git-for-dummies
