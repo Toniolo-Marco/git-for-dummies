@@ -4,10 +4,10 @@
 #diagram(
   node-stroke: .1em,
   node-fill: gradient.radial(blue.lighten(80%), blue, center: (30%, 20%), radius: 80%),
-  spacing: 4em,
+  spacing: 5em,
   edge((-1,0), "r", "-|>", `branch`, label-pos: 0, label-side: center),
   node((0,0), `A`, radius: 1.5em),
-  edge(`modifiche`, "-|>"),
+  edge(`modifiche`, "-|>", label-sep: 1em),
   node((1,0), `B`, radius: 1.5em),
   
 )
