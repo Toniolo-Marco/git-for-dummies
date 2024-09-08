@@ -1,19 +1,32 @@
 # Use GitHub Actions Runner as the base image
-FROM ghcr.io/actions/actions-runner:latest
+FROM debian:stable-slim
 
-# Install Curl
-RUN sudo apt-get update && sudo apt-get install -y curl xz-utils \
-    && sudo apt-get clean \
-    && sudo rm -rf /var/cache/apt/archives/*
+ADD ./runner runner
+
+WORKDIR /runner
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+SHELL ["bash", "-c"]
+
+RUN ./bin/installdependencies.sh && apt-get install -y xz-utils jq curl  && apt-get autoclean && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 # Install Typst
 RUN curl -L https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz -o typst.tar.xz \
     && tar -xf typst.tar.xz \
-    && sudo mv typst-x86_64-unknown-linux-musl/typst /usr/local/bin/ \
+    && mv typst-x86_64-unknown-linux-musl/typst /usr/local/bin/ \
     && rm -rf typst.tar.xz typst-x86_64-unknown-linux-musl
 
 # Verify Typst installation
 RUN typst --version
 
-# Set entrypoint for GitHub runner
-ENTRYPOINT ["/runner/entrypoint.sh"]
+ADD --chmod=754 ./start.sh start.sh
+
+ENTRYPOINT ["bash", "-c", "./start.sh"]
+
+ENV RUNNER_MANAGER_TOKEN=""
+ENV RUNNER_NAME=""
+ENV REPO_NAME=""
+ENV REPO_OWNER=""
+ENV ACTIONS_RUNNER_INPUT_REPLACE=true
+ENV RUNNER_ALLOW_RUNASROOT=true
