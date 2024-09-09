@@ -1,10 +1,152 @@
+#import "@preview/fletcher:0.5.1" as fletcher: diagram, node, edge, shapes
+
+#let branch_indicator(name, start, end, color) = {
+    edge(start, end,"->", label: name, label-pos: 0.25, stroke: 2pt+color)
+}
+
+#let double_node(position, color, out_radius, inner_radius) = {
+    node(position, "", radius: out_radius, stroke: color,extrude: 0, outset: 0.099em)
+    node(position, "", radius: inner_radius, fill: color, stroke: none)
+}
+
+#let branch(name,color,start,nodes_number,nodes_out_radius,nodes_inner_radius) = {
+    branch_indicator(name, start, (start.at(0) + 1,start.at(1)), color)
+
+    let x = start.at(0) + 1 // x node coordinate
+    let i = 0
+    while i < nodes_number {
+        double_node((x,start.at(1)),color,nodes_out_radius,nodes_inner_radius)
+
+        if i < nodes_number - 1 {
+            edge((x,start.at(1)), (x+1,start.at(1)), stroke: 2pt+color)
+        }
+
+        i = i + 1
+        x = x + 1
+    }
+}
+
+#let connect_nodes(start, end, color) = {
+    edge(start, end, stroke: 2pt+color, bend: -20deg)   
+}
+
+
 = Git basics
 == Introduzione
 
 Git è il sistema di versionamento distribuito più utilizzato al mondo. Serve a gestire e tracciare modifiche al codice sorgente nei progetti di sviluppo software. 
 È uno strumento fondamentale per coordinare il lavoro tra più sviluppatori, mantenendo uno storico delle modifiche effettuate. In questo modo evitiamo di avere sparse diverse versioni del nostro progetto: _"finale" "finale-finale" "ultima-versione-finale"_ ecc...
 
-== Configurare Git
+Per ottenere questi risultati, Git utilizza diversi concetti e tecnologie: repository, commit, branch, merge, pull, push, moduli, sotto-moduli, tag, ed altri. In questo documento vedremo i concetti base per iniziare ad utilizzare Git.
+
+In generale possiamo vedere il versionamento come un albero, dove ogni branch, come si evince dal nome, è un ramo di questo albero. A sua volta ogni branch è composto da commit, nodi che rappresentano uno step (o stato) del progetto. 
+
+== Commit
+
+Un commit è un'istantanea del codice in un determinato momento, generalmente ha questi attributi: 
+- hash identificativo univoco
+- messaggio che descrive le modifiche apportate
+- autore (e-mail e nome), co-autori
+- data e ora del commit
+
+Ogni #link("https://git-scm.com/docs/git-commit")[commit] è collegato al precedente, e differisce da esso per le modifiche apportate. Questo ciclo di modifiche e commit è alla base di Git.
+
+Sulla nostra macchina, git, per versionare correttamente i nostri file utilizza concettualmente diversi stati.#footnote([Per approfondimenti visitare https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository])
+
+#align(center,image("img/local-repo.png", width: 90%))
+
+Esaminiamo gli stati:
+
+- *Untracked*: Il file esiste nella directory di lavoro, ma Git non lo sta ancora monitorando, potrebbe essere attivamente ignorato.
+
+- *Tracked*: Tutti gli altri file, che questi siano *Unmodified*, *Modified* o *Staged*
+
+- *Unmodified*: Il file è stato modificato rispetto all'ultima versione committata.
+
+- *Modified*: Viceversa il file è stato modificato dall'ultima versione committata (anche un file appena creato con del testo in una nuovo repository). Alcuni editor elencano i files in questo stato sotto il nome di _changes_.
+
+- *Staged*: Il file, o meglio una sua versione, è portata nell'area di staging. L'area di staging è un'area intermedia che precede un commit. La collezione di files in questo stato è anche detta _staged changes_.
+
+Esaminiamo le azioni:
+
+#grid(columns: (1fr,1fr),
+    [
+    - *Commit*: Un commit rappresenta uno step, nel quale tutti i file sono ad una certa versione. Supponiamo per esempio di dover correggere un libro: potrebbe essere una buona strategia raggruppare tutte le correzioni di un capitolo all'intero di un commit: ovvero ad ogni step del completamento della task.  È possibile ovviamente manipolare (parzialmente) questi commit e viaggiare tra loro, successivamente vedremo come.
+
+    ], 
+    [
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 5em,
+            edge-corner-radius: 0pt,
+            edge-stroke: 2pt+blue,
+
+            branch_indicator("main", (0,0), (1,0),blue),
+
+            double_node((1,0),blue,1.5em, 1em),
+
+            edge((1,0), (2,0)),
+            edge((1,0),(2,0),"-->",bend: 50deg, stroke: 1pt + black,label:"changes"), //CHANGES
+
+            double_node((2,0),blue,1.5em, 1em),
+
+            edge((2,0), (3,0)),
+
+            double_node((3,0),blue,1.5em, 1em)
+        )
+    ] 
+)
+
+- *Edit the file*: Ad ogni commit tutti i file inclusi verrano letti da git come *Unmodified* e ricomincerà questo "ciclo". Editare un file, o crearlo significa portarlo allo stato *Modified*.
+
+- *Stage the file*: La versione *attuale* del file su cui si effettua questa azione viene portata allo stato *staged*, ulteriori modifiche sul medesimo file appariranno porterrano la nuova versione del file nello stato *modified*. Per questo generalmente si effettua questa operazione e subito dopo un commit.
+
+- *Add/Remove the file*: È ovviamente possibile aggiungere o rimuovere file dalla working directory, per far si che un nuovo file sia versionato da git si utilizza lo stesso comando che si utilizza per portarlo da *modified* a *staged*, ovvero `git add <file_name>`. Quando invece si rimuove un file precedentemente versionato, git automaticamente sarà in grado di notarlo e gestirlo.
+
+== Branch
+
+I branch sono utilizzati per lavorare su funzionalità diverse o bugfix separati dal ramo principale (`main` o `master`). Attraverso L'uso dei branch oltre che mantenere una corretta organizzazione del progetto, ci permette di lavorare in parallelo su più funzionalità senza interferire con il lavoro degli altri membri del team.
+
+I branch possono essere creati, rinominati, spostati, uniti (_merge_) e cancellati. Il merge come si può intuire è un'operazione chiave, che permette di unire le funzionalità sviluppate in due branch diversi in uno solo, o di portare le modifiche di un branch nel branch principale.
+
+Il flusso di lavoro più comune è il seguente:
+
+#set text(10pt)
+#diagram(
+    node-stroke: .1em,
+    node-fill: none,
+    spacing: 4em,
+    
+    branch("main",blue,(0,0),7,1.5em, 1em),
+    edge((7,0),(8,0),"--",stroke:2pt+blue),
+    //... other commits
+    
+
+    // develop branch
+    connect_nodes((1,0),(2,1),orange),
+    branch("develop",orange,(1,1),5,1.5em, 1em),
+    connect_nodes((6,1),(7,0),orange),
+
+    // feature branch
+    connect_nodes((3,1),(4,2),yellow),
+    branch("feature",yellow,(3,2),1,1.5em, 1em),
+    connect_nodes((4,2), (5,1),yellow),
+
+    
+    // 2nd feature branch
+    connect_nodes((2,1),(3,3),teal),
+    branch("2nd feature",teal,(2,3),3,1.5em, 1em),
+    connect_nodes((5,3), (6,1),teal),
+
+)
+
+
+
+== Pratica
+
+=== Configurare Git
 Prima di iniziare a utilizzare Git, è importante configurare il proprio nome utente e l'indirizzo email, poiché questi saranno associati ai tuoi commit.
 
 ```bash
@@ -28,17 +170,64 @@ Questo passaggio richiede l'aver già creato l'organizzazione alla quale apparte
 
 2. Premete sul pulsante: #box(fill: rgb("#29903B"),inset: 7pt, baseline: 25%, radius: 4pt)[#text(stroke: white, font: "Segoe UI Variable Static Display", size: 7pt, weight: "thin",tracking: 0.5pt)[New Repository]]
 
-3. Da qui in poi compilate i campi, scegliendo il nome, la visibilità e la descrizione della repo. Il file `README.md` si può aggiungere anche in seguito.
+3. Da qui in poi compilate i campi, scegliendo il nome, la visibilità e la descrizione della repo. Il file README.md si può aggiungere anche in seguito.
 
-4. La pagina della repo ora ci consiglia gli step da seguire direttamente su CLI:
+4. La pagina della repo ora ci consiglia gli step da seguire direttamente su CLI: "_… create a new repository on the command line_"
 
     ```bash
-    git remote add origin https://github.com/nome-organizzazione/nome-repo.git
+    echo "# titolo" >> README.md
+    git init
+    git add README.md
+    git commit -m "first commit"
     git branch -M main
+    git remote add origin https://github.com/Advanced-Programming-2023/test.git
     git push -u origin main
     ```
-    Noi siamo interessati in particolare al comando `git remote add ...`
 
+    Il primo comando crea un file chiamato README.md, se non esiste già e aggiunge la stringa "\# titolo" al suo contenuto. (Il simbolo "\#" in Markdown indica un titolo). Gli altri comandi verranno spiegati nei prossimi capitoli.
+
+== Staging Area
+
+Per portare i file modificati dalla directory di lavoro all'area di staging, usiamo il comando `git add`. Generalmente si usa il comando `git add -A` o `git add .` per aggiungere tutti i file modificati all'area di staging. Tuttavia è possibile aggiungere i file uno alla volta con `git add <nomefile>`. 
+
+=== View Changes
+
+Per visualizzare la lista dei file nella staging area e altre informazioni generiche, possiamo usare il comando:
+
+```
+➜ git status       
+On branch main
+
+No commits yet
+
+Changes to be committed:
+(use "git rm --cached <file>..." to unstage)
+    new file:   README.md
+```
+
+In alternativa per scendere nel dettaglio possiamo utilizzare git diff --cached (o il suo alias --staged)
+
+
+== Gestione dei Remote Repository
+
+Come si può intuire il primo comando suggerito aggiungerà l'URL come repository remote, con il nome *origin*. Per avere informazioni sui remote possiamo servirci di diversi comandi:
+
+    ```
+    ➜ git remote show              #show the name of all remotes
+        origin
+    ➜ git remote show origin       #show info about one remote
+        * remote origin
+        Fetch URL: https://github.com/nome-organizzazione/nome-repo.git
+        Push  URL: https://github.com/nome-organizzazione/nome-repo.git
+        HEAD branch: (unknown)
+    ➜ git remote -v                #show info about all remotes
+        origin	https://github.com/nome-organizzazione/nome-repo.git (fetch)
+        origin	https://github.com/nome-organizzazione/nome-repo.git (push)
+    ```
+
+6. Il secondo comando suggerito (`git branch -M main`) è opzionale, git nomina il branch di default come _master_ invece che come _main_; sta a voi scegliere se lanciare questo comando rinominandolo. 
+
+7. Il terzo comando suggerito 
 
 
 == Clonare un repository
@@ -243,15 +432,3 @@ Se hai bisogno di recuperare un commit cancellato o navigare nella cronologia de
 ```bash
 git reflog
 ```
-
-
-== Repository
-
-Git è basato sulle repository, per inizializzarne una è sufficiente navigare all'interno della 
-
-
-
-=== Commit
-
-I commit sono tutti i singoli step che decidiamo di memorizzare nel nostro su git.
-
