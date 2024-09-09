@@ -1,16 +1,35 @@
 #import "@preview/fletcher:0.5.1" as fletcher: diagram, node, edge, shapes
 
-#set text(10pt)
-#diagram(
-  node-stroke: .1em,
-  node-fill: gradient.radial(blue.lighten(80%), blue, center: (30%, 20%), radius: 80%),
-  spacing: 5em,
-  edge((-1,0), "r", "-|>", `branch`, label-pos: 0, label-side: center),
-  node((0,0), `A`, radius: 1.5em),
-  edge(`modifiche`, "-|>", label-sep: 1em),
-  node((1,0), `B`, radius: 1.5em),
-  
-)
+#let branch_indicator(name, start, end, color) = {
+    edge(start, end,"->", label: name, label-pos: 0.25, stroke: 2pt+color)
+}
+
+#let double_node(position, color, out_radius, inner_radius) = {
+    node(position, "", radius: out_radius, stroke: color,extrude: 0, outset: 0.099em)
+    node(position, "", radius: inner_radius, fill: color, stroke: none)
+}
+
+#let branch(name,color,start,nodes_number,nodes_out_radius,nodes_inner_radius) = {
+    branch_indicator(name, start, (start.at(0) + 1,start.at(1)), color)
+
+    let x = start.at(0) + 1 // x node coordinate
+    let i = 0
+    while i < nodes_number {
+        double_node((x,start.at(1)),color,nodes_out_radius,nodes_inner_radius)
+
+        if i < nodes_number - 1 {
+            edge((x,start.at(1)), (x+1,start.at(1)), stroke: 2pt+color)
+        }
+
+        i = i + 1
+        x = x + 1
+    }
+}
+
+#let connect_nodes(start, end, color) = {
+    edge(start, end, stroke: 2pt+color, bend: -20deg)   
+}
+
 
 = Git basics
 == Introduzione
@@ -55,8 +74,29 @@ Esaminiamo le azioni:
     - *Commit*: Un commit rappresenta uno step, nel quale tutti i file sono ad una certa versione. Supponiamo per esempio di dover correggere un libro: potrebbe essere una buona strategia raggruppare tutte le correzioni di un capitolo all'intero di un commit: ovvero ad ogni step del completamento della task.  È possibile ovviamente manipolare (parzialmente) questi commit e viaggiare tra loro, successivamente vedremo come.
 
     ], 
-    []
-    
+    [
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 5em,
+            edge-corner-radius: 0pt,
+            edge-stroke: 2pt+blue,
+
+            branch_indicator("main", (0,0), (3,0),blue),
+
+            double_node((1,0),blue,1.5em, 1em),
+
+            edge((1,0), (2,0)),
+            edge((1,0),(2,0),"-->",bend: 50deg, stroke: 1pt + black,label:"changes"), //CHANGES
+
+            double_node((2,0),blue,1.5em, 1em),
+
+            edge((2,0), (3,0)),
+
+            double_node((3,0),blue,1.5em, 1em)
+        )
+    ] 
 )
 
 - *Edit the file*: Ad ogni commit tutti i file inclusi verrano letti da git come *Unmodified* e ricomincerà questo "ciclo". Editare un file, o crearlo significa portarlo allo stato *Modified*.
@@ -73,81 +113,34 @@ I branch possono essere creati, rinominati, spostati, uniti (_merge_) e cancella
 
 Il flusso di lavoro più comune è il seguente:
 
-// #let zstack(..args) = style(styles => {
-//     let width = 0pt
-//     let height = 0pt
-//     for item in args.pos() {
-//         let size = measure(item, styles)
-//         width = calc.max(width, size.width)
-//         height = calc.max(height, size.height)
-//     }
-//     block(width: width, height: height, {
-//         for item in args.pos() {
-//             place(center + horizon, item)
-//         }
-//     })
-// })
-
-// #let commit(color, out_radius, inner_color, inner_radius) = {
-//     let out_margin = 2.5pt
-//     let middle_radius = out_radius - out_margin
-
-//     zstack(
-//         // Outer circle
-//         circle(fill: color, radius: out_radius),
-
-//         // White inside
-//         circle(fill: white, radius: middle_radius),
-        
-//         // Inner circle
-//         circle(fill: inner_color, radius: inner_radius)
-//     )
-// }
-
-
-// #let commit_r(commit) = {
-//     // make the line between commits
-//     zstack(
-//         commit,
-//         line()
-//     )
-// }
-
-// #commit_r(commit(red,10pt,red, 2.5pt))
+#set text(10pt)
+#diagram(
+    node-stroke: .1em,
+    node-fill: none,
+    spacing: 4em,
+    
+    branch("main",blue,(0,0),7,1.5em, 1em),
+    edge((7,0),(8,0),"--",stroke:2pt+blue),
+    //... other commits
     
 
-// #let branch(color, name, spacing, commit_list) = {
-//     stack(
-//         dir: ltr,
-//         spacing: spacing,
-//         box(fill: color, radius: 5pt, inset: 5pt, baseline: 50%)[
-//             #text(name, size: 7pt, weight: "light", tracking: 0.5pt)
-//         ],
+    // develop branch
+    connect_nodes((1,0),(2,1),orange),
+    branch("develop",orange,(1,1),5,1.5em, 1em),
+    connect_nodes((6,1),(7,0),orange),
 
-        
-//         if commit_list.len() >= 1 [#commit_list.remove(0)],
+    // feature branch
+    connect_nodes((3,1),(4,2),yellow),
+    branch("feature",yellow,(3,2),1,1.5em, 1em),
+    connect_nodes((4,2), (5,1),yellow),
 
-//         if commit_list.len() >=1{
-//             while commit_list.len() > 0{
-//                 // manage last commit
-//                 if commit_list.len() == 1[
-//                     "asd"],
+    
+    // 2nd feature branch
+    connect_nodes((2,1),(3,3),teal),
+    branch("2nd feature",teal,(2,3),3,1.5em, 1em),
+    connect_nodes((5,3), (6,1),teal),
 
-//                 // manage initial commit
-//                 let c = commit_list.remove(0)
-//                 [line()]
-//             }
-//         } else [commit_list.remove(0)] //manage a single commit
-        
-//     )
-// }
-
-// #let commit_list = (commit(red,10pt,red, 2.5pt),commit(red,10pt,red, 2.5pt),commit(red,10pt,red, 2.5pt),commit(red,10pt,red, 2.5pt))
-
-
-// #branch(red, "main", 10pt, commit_list)
-
-
+)
 
 
 
