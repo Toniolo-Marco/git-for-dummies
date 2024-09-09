@@ -30,7 +30,5 @@
 
 #include "git-advanced.typ"
 
-#include "inviter.typ"
-
 #include "actions.typ"
 
