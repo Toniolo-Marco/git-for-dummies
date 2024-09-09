@@ -83,7 +83,7 @@ Esaminiamo le azioni:
             edge-corner-radius: 0pt,
             edge-stroke: 2pt+blue,
 
-            branch_indicator("main", (0,0), (3,0),blue),
+            branch_indicator("main", (0,0), (1,0),blue),
 
             double_node((1,0),blue,1.5em, 1em),
 
