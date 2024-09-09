@@ -11,7 +11,7 @@ align(horizon + left)[
   Toniolo Marco, Frigerio Federico
 ]
 
-align(bottom + left)[UniTn - Advanced Programming]
+align(bottom + left)[University of Trento, Advanced Programming course]
 
 // #align(bottom + left)[#datetime.today().display()]
 }
