@@ -1,4 +1,5 @@
 #import "@preview/fletcher:0.5.1" as fletcher: diagram, node, edge, shapes
+#import fletcher.shapes: diamond
 
 #let branch_indicator(name, start, end, color) = {
     edge(start, end,"->", label: name, label-pos: 0.25, stroke: 2pt+color)
@@ -37,7 +38,7 @@
 Git è il sistema di versionamento distribuito più utilizzato al mondo. Serve a gestire e tracciare modifiche al codice sorgente nei progetti di sviluppo software. 
 È uno strumento fondamentale per coordinare il lavoro tra più sviluppatori, mantenendo uno storico delle modifiche effettuate. In questo modo evitiamo di avere sparse diverse versioni del nostro progetto: _"finale" "finale-finale" "ultima-versione-finale"_ ecc...
 
-Per ottenere questi risultati, Git utilizza diversi concetti e tecnologie: repository, commit, branch, merge, pull, push, moduli, sotto-moduli, tag, ed altri. In questo documento vedremo i concetti base per iniziare ad utilizzare Git.
+Per ottenere questi risultati, Git utilizza diversi concetti e tecniche: repository, commit, branch, merge, pull, push, fork, moduli, sotto-moduli, tag, ed altri. In questo documento vedremo i concetti base per iniziare ad utilizzare Git.
 
 In generale possiamo vedere il versionamento come un albero, dove ogni branch, come si evince dal nome, è un ramo di questo albero. A sua volta ogni branch è composto da commit, nodi che rappresentano uno step (o stato) del progetto. 
 
@@ -82,6 +83,7 @@ Esaminiamo le azioni:
             spacing: 5em,
             edge-corner-radius: 0pt,
             edge-stroke: 2pt+blue,
+            mark-scale: 50%,
 
             branch_indicator("main", (0,0), (1,0),blue),
 
@@ -113,17 +115,19 @@ I branch possono essere creati, rinominati, spostati, uniti (_merge_) e cancella
 
 Il flusso di lavoro più comune è il seguente:
 
-#set text(10pt)
-#diagram(
+#let repo_example = { 
+set text(10pt)
+diagram(
     node-stroke: .1em,
     node-fill: none,
     spacing: 4em,
+    mark-scale: 50%,
+
     
     branch("main",blue,(0,0),7,1.5em, 1em),
     edge((7,0),(8,0),"--",stroke:2pt+blue),
     //... other commits
     
-
     // develop branch
     connect_nodes((1,0),(2,1),orange),
     branch("develop",orange,(1,1),5,1.5em, 1em),
@@ -134,13 +138,69 @@ Il flusso di lavoro più comune è il seguente:
     branch("feature",yellow,(3,2),1,1.5em, 1em),
     connect_nodes((4,2), (5,1),yellow),
 
-    
     // 2nd feature branch
     connect_nodes((2,1),(3,3),teal),
     branch("2nd feature",teal,(2,3),3,1.5em, 1em),
     connect_nodes((5,3), (6,1),teal),
-
 )
+}
+#align(center)[#scale(90%)[#repo_example]]
+
+
+Al branch develop vengono mergiate tutte le funzionalità sviluppate, successivamente quando si è sicuri che il codice sia stabile e pronto per la produzione, si può fare il merge di develop in main.
+
+== Remote Repository
+
+Tutto quello che abbiamo visto finora riguarda il repository locale, ovvero il repository presente sulla nostra macchina.  Per collaborare con altri sviluppatori è necessario avere un repository remoto, generalmente è hostato su servizi come GitHub, GitLab o self-hosted.
+
+#grid(columns: (4fr,5fr),[
+
+    Il repository remoto è una repository a cui tutto il team può accedere, i suoi branch possono essere sincronizzati, attraverso operazioni di pull e push, con un repository locale. In questo modo, i membri del team possono lavorare su un progetto comune, mantenendo uno storico delle modifiche e delle versioni.
+
+    Per configurare un repository remoto, è necessario aggiungere un _remote_ al repository locale. Un _remote_ è un riferimento a un repository remoto, generalmente chiamato _origin_. Per i progetti più complessi, è possibile aggiungere più _remote_.
+
+    ],[
+
+    #align(center)[#scale(75%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: 1pt,
+            edge-stroke: 1pt,
+            spacing: 10em,
+
+            node((1,0), [Remote Repository\ on GitHub], corner-radius: 2pt, label:"origin"),
+            edge((1,0),(0.25,1),"-|>",bend: 10deg),
+            edge((0.25,1),(1,0),"-|>",label:"git push", bend: 25deg),
+            node((0.25,1), align(center)[Developer 1 \ Machine], shape: rect),
+            edge((1,0),(1,1),"-|>", bend: 10deg),
+            edge((1,1),(1,0),"-|>", bend: 10deg),
+            node((1,1), [Developer 2 \ Machine], shape: rect),
+            edge((1,0),(1.75,1),"-|>",label:"git pull", bend: 10deg),
+            edge((1.75,1),(1,0),"-|>", bend: 25deg),
+            node((1.75,1), [Developer 3 \ Machine], shape: rect),
+        )
+    ]]
+    ]
+)
+
+Si noti come non sia necessario che i repository locali e remoti abbiano gli setessi branch, infatti è possibile avere branch locali che non esistono nel repository remoto e viceversa.
+
+== Pull Request
+
+A questo punto dovrebbe essere chiara l'importanza del branch _main_, se più sviluppatori lavorano su un progetto, è necessario che qualcuno abbia il compito di controllare la qualità del codice in produzione e che risolva i conflitti di merge nel main. Sfortunatamente, ad oggi, il piano gratuito di GitHub non permette di proteggere il branch _main_ da push diretti:
+
+#align(center)[#image("img/gh-rules.png", width: 90%)]
+
+Per questo motivo
+
+- creazione di un team
+- assegnazione dei permessi di _triage_ a questo team
+- aggiunta dei membri del team
+
+
+== Fork
+
+Il fork è una copia di un repository remoto, generalmente su GitHub, che può essere modificata indipendentemente dal repository originale. I fork sono utilizzati per contribuire a progetti open source o per lavorare su una copia di un progetto senza influenzare il repository originale.
 
 
 
