@@ -187,20 +187,97 @@ Si noti come non sia necessario che i repository locali e remoti abbiano gli set
 
 == Pull Request
 
-A questo punto dovrebbe essere chiara l'importanza del branch _main_, se più sviluppatori lavorano su un progetto, è necessario che qualcuno abbia il compito di controllare la qualità del codice in produzione e che risolva i conflitti di merge nel main. Sfortunatamente, ad oggi, il piano gratuito di GitHub non permette di proteggere il branch _main_ da push diretti:
+A questo punto dovrebbe essere chiara l'importanza del branch _main_, se più sviluppatori lavorano su un progetto, è necessario che qualcuno abbia il compito di controllare la qualità del codice in produzione e che risolva i conflitti di merge nel main.
+
+Per farlo si utilizzano le _pull request_ (pr), che sono delle richieste di merge di un branch in un altro (solitamente nel main). Le _pull request_ permettono di discutere le modifiche apportate, di fare code review e di risolvere i conflitti di merge prima di unire i branch.
+
+Di seguito un'esempio di _pull request_ su GitHub:
+
+#align(center)[#image("img/pr-example.png", width: 90%)]
+
+La pr rappresentata è composta da:
+- il titolo della pr
+- la descrizione delle modifiche apportate
+- numero identificativo (*per eliminare una pr è necessario contattare github*)
+- commit associati (anche di diversi autori)
+- stato della pr (aperta, chiusa, merge, ecc.)
+- eventuali commenti
+
+Sfortunatamente, ad oggi, il piano gratuito di GitHub non permette di proteggere il branch _main_ da push diretti:
 
 #align(center)[#image("img/gh-rules.png", width: 90%)]
 
-Per questo motivo
+Un modo per aggirare questo problema, all'interno delle organizzazioni, è:
+- creare un team
+- assegnare dei permessi di _triage_ a questo team
+- aggiungere dei membri del team
 
-- creazione di un team
-- assegnazione dei permessi di _triage_ a questo team
-- aggiunta dei membri del team
-
+In questo modo, solo gli owner dell'organizzazione potranno approvare le pull request.
 
 == Fork
 
+Come i più attenti di voi avranno notato nell'immagine d'esempio della _pull request_, il repository da cui proviene la pr è differente da quello in cui si vuole fare il merge (l'originale). Questo perché il repository da cui proviene la pr è un _fork_ del repository originale.
+
 Il fork è una copia di un repository remoto, generalmente su GitHub, che può essere modificata indipendentemente dal repository originale. I fork sono utilizzati per contribuire a progetti open source o per lavorare su una copia di un progetto senza influenzare il repository originale.
+
+Su GitHub le repositories ereditano la visibilità del repository originale, ma non le issue, le pull request. Inoltre, se la repository originale viene cancellata, il fork rimane, senza link alla repo originale.
+
+#let stroke_color = "#9198A1"
+#let fill_color = "#262C36"
+#let text_color = "#B0B7BE"
+
+#let fork_svg = read("img/fork.svg")
+#let white_fork = fork_svg.replace("#323232", stroke_color)
+#let dropdown_icon = "▼"  
+
+Forkare una repo è intuitivo. Nella sezione #link("https://github.com/trending")[trending] di GitHub, possiamo vedere i progetti più popolari del momento. Prendiamo ad esempio il progetto #link("https://github.com/rustdesk/rustdesk")[RustDesk]: _"An open-source remote desktop application designed for self-hosting, as an alternative to TeamViewer"_. Per forkare il progetto, basta premere il pulsante _Fork_ in alto a destra. 
+#box(
+    fill: rgb(fill_color), 
+    inset: 7pt, 
+    baseline: 35%, 
+    radius: 4pt,
+    stroke: rgb(stroke_color)+1pt
+    )[
+
+    #stack(dir:ltr, spacing: 15pt, 
+        image.decode(white_fork, width: 12pt),
+
+        text(
+            stroke: rgb(text_color),
+            font: "Noto Sans",
+            size: 10pt,
+            weight: "thin",
+            tracking: 1pt,
+            baseline: 1pt)[
+            Fork 
+        ],
+
+        box(
+            fill: none, 
+            height: 0pt,
+            inset: 0pt, 
+            radius: 0pt)[
+            #text(
+                stroke: rgb(stroke_color), 
+                font: "Noto Sans",
+                fill: rgb(text_color),
+                size: 24pt,
+                weight: "thin", 
+                baseline: -5pt)[|]
+        ],
+
+        text(
+            stroke: rgb(stroke_color), 
+            fill: rgb(stroke_color),
+            size: 12pt,
+            weight: "thin", 
+            baseline: 0pt)[#dropdown_icon]
+    )
+]
+
+
+
+
 
 
 
