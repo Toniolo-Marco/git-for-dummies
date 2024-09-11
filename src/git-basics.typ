@@ -1,5 +1,6 @@
 #import "@preview/fletcher:0.5.1" as fletcher: diagram, node, edge, shapes
 #import fletcher.shapes: diamond
+#import "components/gh-button.typ": gh_button
 
 #let branch_indicator(name, start, end, color) = {
     edge(start, end,"->", label: name, label-pos: 0.25, stroke: 2pt+color)
@@ -201,6 +202,7 @@ La pr rappresentata è composta da:
 - numero identificativo (*per eliminare una pr è necessario contattare github*)
 - commit associati (anche di diversi autori)
 - stato della pr (aperta, chiusa, merge, ecc.)
+- label (tag che permettono di categorizzare le pr)
 - eventuali commenti
 
 Sfortunatamente, ad oggi, il piano gratuito di GitHub non permette di proteggere il branch _main_ da push diretti:
@@ -228,53 +230,15 @@ Su GitHub le repositories ereditano la visibilità del repository originale, ma 
 
 #let fork_svg = read("img/fork.svg")
 #let white_fork = fork_svg.replace("#323232", stroke_color)
-#let dropdown_icon = "▼"  
+
+#let pr_svg = read("img/pr.svg")
+#let white_pr = pr_svg.replace("#000000", stroke_color)
 
 Forkare una repo è intuitivo. Nella sezione #link("https://github.com/trending")[trending] di GitHub, possiamo vedere i progetti più popolari del momento. Prendiamo ad esempio il progetto #link("https://github.com/rustdesk/rustdesk")[RustDesk]: _"An open-source remote desktop application designed for self-hosting, as an alternative to TeamViewer"_. Per forkare il progetto, basta premere il pulsante _Fork_ in alto a destra. 
-#box(
-    fill: rgb(fill_color), 
-    inset: 7pt, 
-    baseline: 35%, 
-    radius: 4pt,
-    stroke: rgb(stroke_color)+1pt
-    )[
+#gh_button(white_fork, "Fork", fill_color, text_color, stroke_color, true)
 
-    #stack(dir:ltr, spacing: 15pt, 
-        image.decode(white_fork, width: 12pt),
-
-        text(
-            stroke: rgb(text_color),
-            font: "Noto Sans",
-            size: 10pt,
-            weight: "thin",
-            tracking: 1pt,
-            baseline: 1pt)[
-            Fork 
-        ],
-
-        box(
-            fill: none, 
-            height: 0pt,
-            inset: 0pt, 
-            radius: 0pt)[
-            #text(
-                stroke: rgb(stroke_color), 
-                font: "Noto Sans",
-                fill: rgb(text_color),
-                size: 24pt,
-                weight: "thin", 
-                baseline: -5pt)[|]
-        ],
-
-        text(
-            stroke: rgb(stroke_color), 
-            fill: rgb(stroke_color),
-            size: 12pt,
-            weight: "thin", 
-            baseline: 0pt)[#dropdown_icon]
-    )
-]
-
+La repository verrà copiata nel vostro account GitHub. Allo stesso modo potrete proporre le modifiche apportate su uno dei vostri branch, clickando sul pulsante _Contribute_ e successivamente _Open pull request_ (trovate entrambi sulla pagina principale del vostro fork). 
+#gh_button(white_pr, "Contribute", fill_color, text_color, stroke_color, false)
 
 
 

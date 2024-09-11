@@ -55,4 +55,3 @@
 #include "git-advanced.typ"
 
 #include "actions.typ"
-
