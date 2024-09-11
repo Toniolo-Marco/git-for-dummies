@@ -1,37 +1,7 @@
 #import "@preview/fletcher:0.5.1" as fletcher: diagram, node, edge, shapes
 #import fletcher.shapes: diamond
 #import "components/gh-button.typ": gh_button
-
-#let branch_indicator(name, start, end, color) = {
-    edge(start, end,"->", label: name, label-pos: 0.25, stroke: 2pt+color)
-}
-
-#let double_node(position, color, out_radius, inner_radius) = {
-    node(position, "", radius: out_radius, stroke: color,extrude: 0, outset: 0.099em)
-    node(position, "", radius: inner_radius, fill: color, stroke: none)
-}
-
-#let branch(name,color,start,nodes_number,nodes_out_radius,nodes_inner_radius) = {
-    branch_indicator(name, start, (start.at(0) + 1,start.at(1)), color)
-
-    let x = start.at(0) + 1 // x node coordinate
-    let i = 0
-    while i < nodes_number {
-        double_node((x,start.at(1)),color,nodes_out_radius,nodes_inner_radius)
-
-        if i < nodes_number - 1 {
-            edge((x,start.at(1)), (x+1,start.at(1)), stroke: 2pt+color)
-        }
-
-        i = i + 1
-        x = x + 1
-    }
-}
-
-#let connect_nodes(start, end, color) = {
-    edge(start, end, stroke: 2pt+color, bend: -20deg)   
-}
-
+#import "components/git-graph.typ": branch_indicator, double_node, connect_nodes, branch
 
 = Git basics
 == Introduzione
@@ -116,37 +86,36 @@ I branch possono essere creati, rinominati, spostati, uniti (_merge_) e cancella
 
 Il flusso di lavoro più comune è il seguente:
 
-#let repo_example = { 
-set text(10pt)
-diagram(
-    node-stroke: .1em,
-    node-fill: none,
-    spacing: 4em,
-    mark-scale: 50%,
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+            
+            branch("main",blue,(0,0),7,1.5em, 1em),
+            edge((7,0),(8,0),"--",stroke:2pt+blue),
+            //... other commits
+            
+            // develop branch
+            connect_nodes((1,0),(2,1),orange),
+            branch("develop",orange,(1,1),5,1.5em, 1em),
+            connect_nodes((6,1),(7,0),orange),
 
-    
-    branch("main",blue,(0,0),7,1.5em, 1em),
-    edge((7,0),(8,0),"--",stroke:2pt+blue),
-    //... other commits
-    
-    // develop branch
-    connect_nodes((1,0),(2,1),orange),
-    branch("develop",orange,(1,1),5,1.5em, 1em),
-    connect_nodes((6,1),(7,0),orange),
+            // feature branch
+            connect_nodes((3,1),(4,2),yellow),
+            branch("feature",yellow,(3,2),1,1.5em, 1em),
+            connect_nodes((4,2), (5,1),yellow),
 
-    // feature branch
-    connect_nodes((3,1),(4,2),yellow),
-    branch("feature",yellow,(3,2),1,1.5em, 1em),
-    connect_nodes((4,2), (5,1),yellow),
-
-    // 2nd feature branch
-    connect_nodes((2,1),(3,3),teal),
-    branch("2nd feature",teal,(2,3),3,1.5em, 1em),
-    connect_nodes((5,3), (6,1),teal),
-)
-}
-#align(center)[#scale(90%)[#repo_example]]
-
+            // 2nd feature branch
+            connect_nodes((2,1),(3,3),teal),
+            branch("2nd feature",teal,(2,3),3,1.5em, 1em),
+            connect_nodes((5,3), (6,1),teal),
+        )
+    ]
+]
 
 Al branch develop vengono mergiate tutte le funzionalità sviluppate, successivamente quando si è sicuri che il codice sia stabile e pronto per la produzione, si può fare il merge di develop in main.
 
@@ -239,10 +208,6 @@ Forkare una repo è intuitivo. Nella sezione #link("https://github.com/trending"
 
 La repository verrà copiata nel vostro account GitHub. Allo stesso modo potrete proporre le modifiche apportate su uno dei vostri branch, clickando sul pulsante _Contribute_ e successivamente _Open pull request_ (trovate entrambi sulla pagina principale del vostro fork). 
 #gh_button(white_pr, "Contribute", fill_color, text_color, stroke_color, false)
-
-
-
-
 
 
 == Pratica
