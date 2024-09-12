@@ -44,7 +44,9 @@
 #outline()
 #pagebreak()
 
-#include "git-basics.typ"
+#include "git-basics-theory.typ"
+
+#include "git-basics-practice.typ"
 
 #include "roles-duties.typ"
 
