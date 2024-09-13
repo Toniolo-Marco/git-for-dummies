@@ -9,6 +9,7 @@ git config --global user.email "your@email"
 ```
 
 == Inizializzare un nuovo repository
+
 Per creare un nuovo progetto con Git, spostati nella directory del tuo progetto e inizializza un repository con il comando 
 #footnote("Ignoriamo per ora l'output che verrà analizzato in seguito"):
 
@@ -16,7 +17,9 @@ Per creare un nuovo progetto con Git, spostati nella directory del tuo progetto 
 git init
 ```
 
-Così avrai il repository solo in locale, sul tuo computer: non molto utile per collaborare con altri. Git si basa sui concetti di *local* e *remote*. In locale fai commit, crei branch e tutte le operazioni che vedremo successivamente. Le modifiche effettuate in locale *non influiscono automaticamente* sul remote. Solitamente, per i progetti più piccoli, come quelli individuali o quello affrontato nel corso di Advanced Programming, il remote repository è uno solo e sarà hostato su *GitHub*.
+Abbiamo crato così il repository locale, sul nostro computer. Come abbiamo visto nel capitolo precedente: @remote[Remote Repository], Git si basa sui concetti di *local* e *remote*. Dunque le modifiche effettuate in locale *non influiscono automaticamente* sul remote. 
+
+Solitamente, per i progetti più piccoli, come quelli individuali o quello affrontato nel corso di Advanced Programming, il remote repository è uno solo e sarà hostato su *GitHub*.
 
 Questo passaggio richiede l'aver già creato l'organizzazione alla quale apparterrà il repository. In alternativa è possibile crearla come personale e poi passare l'ownership.
 
@@ -29,7 +32,7 @@ Questo passaggio richiede l'aver già creato l'organizzazione alla quale apparte
 4. La pagina della repo ora ci consiglia gli step da seguire direttamente su CLI: "_… create a new repository on the command line_"
 
     ```bash
-    echo "# titolo" >> README.md
+    echo "# title" >> README.md
     git init
     git add README.md
     git commit -m "first commit"
@@ -38,28 +41,124 @@ Questo passaggio richiede l'aver già creato l'organizzazione alla quale apparte
     git push -u origin main
     ```
 
-    Il primo comando crea un file chiamato README.md, se non esiste già e aggiunge la stringa "\# titolo" al suo contenuto. (Il simbolo "\#" in Markdown indica un titolo). Gli altri comandi verranno spiegati nei prossimi capitoli.
+    Il primo comando crea un file chiamato README.md, se non esiste già e aggiunge la stringa "\# title" al suo contenuto. (Il simbolo "\#" in Markdown indica un titolo). Gli altri comandi verranno spiegati nei prossimi capitoli.
 
-== Staging Area
+== Clonare un repository
 
-Per portare i file modificati dalla directory di lavoro all'area di staging, usiamo il comando `git add`. Generalmente si usa il comando `git add -A` o `git add .` per aggiungere tutti i file modificati all'area di staging. Tuttavia è possibile aggiungere i file uno alla volta con `git add <nomefile>`. 
+Nel caso il progetto esista già è sufficiente: spostarci nella cartella e clonare il repository: `git clone <url-repository>`. In questo modo avremmo una copia del repository remoto sulla nostra macchina.
 
-=== View Changes
+== Staging Area <stagin-area><git-add>
+
+Per portare i file modificati dalla directory di lavoro all'area di staging, usiamo il comando `git add`. Generalmente si usa il comando `git add -A` o `git add .` per aggiungere tutti i file modificati all'area di staging. Tuttavia è possibile aggiungere i file uno alla volta con `git add <nomefile>`. Similmente possiamo aggiungre tutti i file che rispettano una Regex con `git add <regex>`; ad esempio: `git add Documentation/\*.txt`, aggiungerà tutti i file `.txt` presenti nella cartella `Documentation`.
+
+== Difetti di Git
+
+Durante lo sviluppo di git, sono sviluppate diverse funzionalità molto utili e nel tempo sono state aggiunte quasi tutte al comando `git checkout`. Attualmente il team di Git, sta lavorando per separare queste funzionalità in comandi distinti.
+
+Allo stesso anche in altri casi troveremo comandi diversi che hanno lo stesso scopo. In questo documento vedremo entrambe le versioni per completezza; tuttavia è consigliabile utilizzare i comandi più recenti.
+
+Per dare subito un esempio di questo problema, analizziamo il caso in cui vogliamo vedere l'attuale stato in cui ci troviamo.
+
+== Analizzare lo stato del repository
 
 Per visualizzare la lista dei file nella staging area e altre informazioni generiche, possiamo usare il comando:
 
-```
+```bash
 ➜ git status       
-On branch main
-
+On branch main                                  # Current branch
 No commits yet
 
-Changes to be committed:
+Changes to be committed:                        # File in stage
 (use "git rm --cached <file>..." to unstage)
-    new file:   README.md
+    new file:   README.md                       # File added to stage (new file)
 ```
 
-In alternativa per scendere nel dettaglio possiamo utilizzare git diff --cached (o il suo alias --staged)
+Questo è il caso in cui abbiamo appena creato il repository e aggiunto il file README.md.
+
+Se invece abbiamo delle modifiche in stage ed altre che non lo sono, otterremo un output simile a questo:
+
+```bash
+➜ git status
+On branch git-basics                                # The current branch
+Your branch is up to date with 'origin/git-basics'. # Last commit is the same as the remote
+
+Changes to be committed:                            # List of staged files
+  (use "git restore --staged <file>..." to unstage)
+        modified:   src/git-basics-theory.typ
+
+Changes not staged for commit:                      # List of not staged files
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   src/git-basics-practice.typ
+
+Untracked files:                                    # List of Untracked files
+  (use "git add <file>..." to include in what will be committed)
+        src/untracked-file.ops
+```
+
+In modo simile con `git checkout` possiamo avere un riassunto grossolano; in output vedremo solo i file modificati, senza ulteriori dettagli e non verranno mostrati i file *untracked*.
+
+```bash
+➜ git checkout
+M       src/git-basics-practice.typ                 # Show only modified files
+M       src/git-basics-theory.typ                   #
+Your branch is up to date with 'origin/git-basics'. #
+```
+
+== Analizzare le Modifiche
+
+Oltre allo stato per esaminare tutte le differenze tra i file dell'ultimo commit e gli attuali possiamo utilizzare il comando `git status -vv`, abbreviazione di `git status -v -v`. 
+Alternativamente possiamo utilizzare `git diff @` dalla versione 1.8.5, o `git diff HEAD` per versioni precedenti.
+#footnote([Nessuno dei due mostra il contenuto dei file *untracked*; `git stastus -vv` mostra solo che esistono])
+
+Con `HEAD` si fa riferimento all'ultimo commit effettuato.
+
+Se abbiamo apportato modifiche a più file, risulterebbe molto utile avere un controllo granulare sulle differenze che vogliamo visualizzare:
+  - Per visualizzare le modifiche apportate sul singolo file possiamo utilizzare il comando `git diff <nomefile>`.
+
+  - Per visualizzare tutte le modifiche dei file in stage possiamo utilizzare `git diff --cached` (o il suo alias `--staged`). Altrimenti possiamo utilizzare `git status -v`.
+
+  - Per visulizzare invece le modifiche le modifiche dei file che non sono in stage possiamo utilizzare `git diff`. #footnote([l'argomento `--no-index` è necessario se non siamo in un repository git])
+
+== Commit
+
+Una volta che aggiunti i file all'area di staging, possiamo creare un commit con il comando:
+
+```bash
+git commit -m "Messaggio descrittivo delle modifiche"
+```
+
+Se si vogliono aggiungere tutti i file modificati alla staging area e creare un commit in un solo comando, si può usare:
+
+```bash
+git commit -am "Messaggio descrittivo delle modifiche"
+```
+
+Se si vogliono aggiungere tutti i file, anche quelli untracked, non è possibile farlo in un solo comando. Si dovrà prima aggiungere i file all'area di staging con `git add -A` e poi creare il commit, seguendo l'iter classico.
+
+=== Alias 
+
+Spesso si utilizzano alias per abbreviare i comandi più lunghi, o combinare più comandi in uno solo. Per esempio, per creare un alias per aggiungere tutti i file in stage e quindi commitare anche i file untracked:
+
+```bash
+git config --global alias.commit-all '!git add -A && git commit'
+
+git commit-all -m "Messaggio descrittivo delle modifiche"
+```
+
+Per approfondire l'argomento degli alias, consigliamo di consultare la #link("https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases")[documentazione ufficiale di Git].
+
+
+=== Co-author in commit
+
+#grid(columns: 2, column-gutter: 1em, [Alcune piattaforme, come GitHub, permettono di aggiungere co-autori ai commit. Per farlo basta che il messaggio del commit sia formattato nel seguente modo:
+
+```bash
+git commit -m "Messaggio del commit
+
+```
+
+],image("img/co-authored-commit.png"))
 
 
 == Gestione dei Remote Repository
@@ -81,46 +180,8 @@ Come si può intuire il primo comando suggerito aggiungerà l'URL come repositor
 
 6. Il secondo comando suggerito (`git branch -M main`) è opzionale, git nomina il branch di default come _master_ invece che come _main_; sta a voi scegliere se lanciare questo comando rinominandolo. 
 
-7. Il terzo comando suggerito 
 
 
-== Clonare un repository
-Se vuoi lavorare su un progetto esistente, per prima cosa devi clonare il repository:
-
-```bash
-git clone <url-repository>
-```
-
-Questo comando copia il repository in locale.
-
-Questo crea una nuova cartella `.git`, che contiene tutte le informazioni di Git.
-
-4. Controllare lo stato del repository
-Per vedere lo stato attuale del repository, quali file sono stati modificati, aggiunti o rimossi, usa:
-
-```bash
-git status
-```
-
-5. Aggiungere file all'area di staging
-Prima di confermare le modifiche, è necessario aggiungere i file all'area di staging. Puoi aggiungere un singolo file:
-
-```bash
-git add <nomefile>
-```
-
-Oppure aggiungere tutti i file modificati:
-
-```bash
-git add .
-```
-
-6. Effettuare un commit
-Una volta che hai aggiunto i file all'area di staging, puoi effettuare un commit. Un commit è un'istantanea del codice nel tempo.
-
-```bash
-git commit -m "Messaggio descrittivo delle modifiche"
-```
 
 Il messaggio di commit dovrebbe essere chiaro e descrivere cosa hai fatto.
 

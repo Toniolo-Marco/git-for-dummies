@@ -119,7 +119,7 @@ Il flusso di lavoro più comune è il seguente:
 
 Al branch develop vengono mergiate tutte le funzionalità sviluppate, successivamente quando si è sicuri che il codice sia stabile e pronto per la produzione, si può fare il merge di develop in main.
 
-== Remote Repository
+== Remote Repository <remote>
 
 Tutto quello che abbiamo visto finora riguarda il repository locale, ovvero il repository presente sulla nostra macchina.  Per collaborare con altri sviluppatori è necessario avere un repository remoto, generalmente è hostato su servizi come GitHub, GitLab o self-hosted.
 
@@ -127,7 +127,7 @@ Tutto quello che abbiamo visto finora riguarda il repository locale, ovvero il r
 
     Il repository remoto è una repository a cui tutto il team può accedere, i suoi branch possono essere sincronizzati, attraverso operazioni di pull e push, con un repository locale. In questo modo, i membri del team possono lavorare su un progetto comune, mantenendo uno storico delle modifiche e delle versioni.
 
-    Per configurare un repository remoto, è necessario aggiungere un _remote_ al repository locale. Un _remote_ è un riferimento a un repository remoto, generalmente chiamato _origin_. Per i progetti più complessi, è possibile aggiungere più _remote_.
+    Per configurare un repository remoto, è necessario aggiungere un collegamento al _remote_. Il _remote repository_ è generalmente chiamato _origin_. Per i progetti più complessi, è possibile aggiungere più _remote_.
 
     ],[
 
@@ -155,7 +155,7 @@ Tutto quello che abbiamo visto finora riguarda il repository locale, ovvero il r
 
 Si noti come non sia necessario che i repository locali e remoti abbiano gli setessi branch, infatti è possibile avere branch locali che non esistono nel repository remoto e viceversa.
 
-== Pull Request
+== Pull Request <pr>
 
 A questo punto dovrebbe essere chiara l'importanza del branch _main_, se più sviluppatori lavorano su un progetto, è necessario che qualcuno abbia il compito di controllare la qualità del codice in produzione e che risolva i conflitti di merge nel main.
 
@@ -185,7 +185,7 @@ Un modo per aggirare questo problema, all'interno delle organizzazioni, è:
 
 In questo modo, solo gli owner dell'organizzazione potranno approvare le pull request.
 
-== Fork
+== Fork <fork>
 
 Come i più attenti di voi avranno notato nell'immagine d'esempio della _pull request_, il repository da cui proviene la pr è differente da quello in cui si vuole fare il merge (l'originale). Questo perché il repository da cui proviene la pr è un _fork_ del repository originale.
 
