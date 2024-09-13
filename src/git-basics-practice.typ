@@ -152,14 +152,17 @@ Per approfondire l'argomento degli alias, consigliamo di consultare la #link("ht
 === Co-author in commit
 
 #grid(columns: 2, column-gutter: 1em, [Alcune piattaforme, come GitHub, permettono di aggiungere co-autori ai commit. Per farlo basta che il messaggio del commit sia formattato nel seguente modo:
-
-```bash
-git commit -m "Messaggio del commit
-
-```
-
 ],image("img/co-authored-commit.png"))
 
+```bash
+git commit -m "Commit message
+>
+>
+Co-authored-by: NAME <NAME@EXAMPLE.COM>
+Co-authored-by: ANOTHER-NAME <ANOTHER-NAME@EXAMPLE.COM>"
+```
+
+Per ulteriori informazionei consultare la #link("https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors")[documentazione ufficiale di GitHub].
 
 == Gestione dei Remote Repository
 
