@@ -41,3 +41,25 @@ Talvolta potremmo accorgerci di aver fatto commit non necessari, o di voler aver
 
 
 In questi casi possiamo usare il comando `git rebase -i HEAD~n` dove `n` è il numero di commit che vogliamo combinare.
+
+
+```bash
+added 1
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Mon Sep 16 09:39:13 2024 +0200
+#
+# interactive rebase in progress; onto f3c8de5
+# Last command done (1 command done):
+#    reword 52ddcf4 added 1
+# Next commands to do (2 remaining commands):
+#    squash 6438329 added 2
+#    squash aa86ec5 added 3
+# You are currently editing a commit while rebasing branch 'add-numbers' on 'f3c8de5'.
+#
+# Changes to be committed:
+#	modified:   README.md
+#
+```
