@@ -1,0 +1,5 @@
+= Inviter
+Come detto in precedenza è impensabile aggiungere manualmente tutti all'organizzazione, per questo abbiamo crato una piccola web app che utilizzando le api di GitHub consente di invitare autameticamente le persone, è distribuita sotto forma di container, quindi potete eseguirla su un server con Linux e Docker oppure, se avete un altro sistema operativo potete usare una delle release. Per iniziare recatevi alla pagina #link("https://github.com/FrostWalk/GitHub-Inviter")[GitHub] dell'inviter, qui troverete, oltre al codice e al `docker-compose.yml` da usare per hostare l'applicazione tutte le istruzioni e parametri per adattarlo alla vostra organizzazione.
+
+== Creare il token
+La prima cosa da fare è procurarsi il token da usare per l'inviter, per farlo andate su una pagina qualunque di GitHub, poi cliccate sulla vostra foto profilo in alto a destra.

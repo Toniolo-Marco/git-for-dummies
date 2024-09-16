@@ -32,12 +32,37 @@ scegliete *Triage*, per ultimo il gruppo *Tutors* ai quali va il ruolo di *Read*
 
 == Workflow consigliato
 Lo scorso anno, abbiamo provato a mimare l'approccio utilizzato dai grandi progetti open source per la gestione dei repository, questo cosisteva nelle seguenti fasi
-+ Apertura di una issue
-+ Votazione (se si tratta di una feature proposta)
 + Fork del repository
-+ implentazione
-+ Apertura di una pull request associata alla issue
-+ Revisione
++ Apertura di una issue e implentazione
++ Votazione (se si tratta di una feature proposta)
 + Merge nel main
 + Pubblicazione della nuova versione
 
+=== Apertura di una issue e implentazione
+Le issue sono una feature delle piattaforme come GitHub per tracciare e gestire attività, bug, richieste di funzionalità o discussioni generali relative a un progetto. Serve ai membri del team, ai collaboratori e agli utenti per comunicare su specifici lavori o problemi all'interno di un repository.
+Ogni issue ha un *titolo* che deve fornire una sintesi chiara, una *descrizione* dove si descrive nel dettaglio la issue, il testo è in markdown, quindi è possibile integrare codice (opportunamente formattato), immagini e molto altro. Ad ogni issue può essere associata a una pull request, questo è fondamentale per associare un fix o una implentazione all'effettivo codice che andrà inserito nel common crate e in fine, una issue può avere 0 o più labels e vi consigliamo vivamente di usarle, perchè fornisco una rapida descrizione del tipo di issue e permettono di filtrarle facilmente. Per esempio l'anno scorso avevamo le seguenti labels:
+
+- approved (la issue è stata approvata con una votazione)
+- bug (la issue solleva la presenza di un bug e o propone un fix)
+- check required (la issue non è chiara e richiede un approfondimento)
+- CIRITICAL (la issue è fondamentale e va completata il prima possibile)
+- discussion needed (la issue presenta l'implentazione di una nuova feature e va discussa alla prossima riunione)
+- documentation (la issue aggiunge documentazione al codice o alle specifiche)
+- in progress (la issue è in fase di elaborazione da parte di qualcuno, non è stata ne chiusa ne approvata)
+- proposal (la issue propone l'implentazione di qualcosa di nuovo e va votata)
+- question (la issue è una domanda riguardante il common crate)
+- rejected (la issue non è stata approvata durante la riunione)
+- test (la issue aggiunge o modifica uno o più test)
+- TODO code (la issue presenta un'idea ma manca il codice)
+- vote required (la issue richiede una votazione, indipendentemente dal tipo)
+
+Solitamente chi apre la issue imposta il se stesso come *Assignees*, assegna le label appropriate e linka la pull request col codice. I GM controllano le issue, richiedono di approfondire aggiungendo testo o esempio e aggiungono le label che ritengono necessarie.
+
+=== Votazione
+Se la issue richiede una votazione, allora alla prima riuone dei WG chi ha aperto la issue espone la propria idea e implentazione, poi i WG votano se accettarla o meno, a questo punto un GM imposta la label appropriata (approved o rejected), accetta la pull request (solo se approvata) e poi chiude la issue. È quindi necessario che almeno un GM sia presente durante le riunioni.
+
+== Merge nel main
+Dopo che un GM ha approvato la PR (pull request), il codice proposto viene mergiato nel main, prima di accettare una PR è fondamentale che un GH cloni il conentuno della PR, la testi e poi in caso sia necessario richieda modifiche, rispondendo alla issue. Tutto questo è automatizzabile tramite le action, ma ne parleremo più avanti.
+
+=== Pubblicazione della nuova versione
+Dopo aver accettato una PR, è consigliabile incrementare la versione del common crate modificando il cargo.toml e successivamente pubblicando la nuova versione.
