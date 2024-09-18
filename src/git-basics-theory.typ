@@ -56,18 +56,13 @@ Esaminiamo le azioni:
             edge-stroke: 2pt+blue,
             mark-scale: 50%,
 
-            branch_indicator("main", (0,0), (1,0),blue),
+            branch(
+                name:"main",
+                color:blue,
+                start:(0,0),
+                length: 3),
 
-            double_node((1,0),blue,1.5em, 1em),
-
-            edge((1,0), (2,0)),
             edge((1,0),(2,0),"-->",bend: 50deg, stroke: 1pt + black,label:"changes"), //CHANGES
-
-            double_node((2,0),blue,1.5em, 1em),
-
-            edge((2,0), (3,0)),
-
-            double_node((3,0),blue,1.5em, 1em)
         )
     ] 
 )
@@ -86,36 +81,56 @@ I branch possono essere creati, rinominati, spostati, uniti (_merge_) e cancella
 
 Il flusso di lavoro più comune è il seguente:
 
-#align(center)[
-    #scale(90%)[
-        #set text(10pt)
-        #diagram(
-            node-stroke: .1em,
-            node-fill: none,
-            spacing: 4em,
-            mark-scale: 50%,
-            
-            branch("main",blue,(0,0),7,1.5em, 1em),
-            edge((7,0),(8,0),"--",stroke:2pt+blue),
-            //... other commits
-            
-            // develop branch
-            connect_nodes((1,0),(2,1),orange),
-            branch("develop",orange,(1,1),5,1.5em, 1em),
-            connect_nodes((6,1),(7,0),orange),
+#figure(
+    align(center)[
+        #scale(90%)[
+            #set text(10pt)
+            #diagram(
+                node-stroke: .1em,
+                node-fill: none,
+                spacing: 4em,
+                mark-scale: 50%,
+                
+                branch(
+                    name:"main",
+                    color:blue,
+                    start:(0,0),
+                    length:7),
+                edge((7,0),(8,0),"--",stroke:2pt+blue),
+                //... other commits
+                
+                // develop branch
+                connect_nodes((1,0),(2,1),orange),
+                branch(
+                    name:"develop",
+                    color:orange,
+                    start:(1,1),
+                    length:5),
+                connect_nodes((6,1),(7,0),orange),
 
-            // feature branch
-            connect_nodes((3,1),(4,2),yellow),
-            branch("feature",yellow,(3,2),1,1.5em, 1em),
-            connect_nodes((4,2), (5,1),yellow),
+                // feature branch
+                connect_nodes((3,1),(4,2),yellow),
+                branch(
+                    name:"feature",
+                    color:yellow,
+                    start:(3,2)),
+                connect_nodes((4,2), (5,1),yellow),
 
-            // 2nd feature branch
-            connect_nodes((2,1),(3,3),teal),
-            branch("2nd feature",teal,(2,3),3,1.5em, 1em),
-            connect_nodes((5,3), (6,1),teal),
-        )
-    ]
-]
+                // 2nd feature branch
+                connect_nodes((2,1),(3,3),teal),
+                branch(
+                    name:"2nd feature",
+                    color:teal,
+                    start:(2,3),
+                    length:3),
+                connect_nodes((5,3), (6,1),teal),
+                
+            )
+        ]
+    ],
+    caption: [Workflow Diagram]
+)<workflow>
+
 
 Al branch develop vengono mergiate tutte le funzionalità sviluppate, successivamente quando si è sicuri che il codice sia stabile e pronto per la produzione, si può fare il merge di develop in main.
 
