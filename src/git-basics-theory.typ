@@ -1,7 +1,7 @@
 #import "@preview/fletcher:0.5.1" as fletcher: diagram, node, edge, shapes
 #import fletcher.shapes: diamond
 #import "components/gh-button.typ": gh_button
-#import "components/git-graph.typ": branch_indicator, double_node, connect_nodes, branch
+#import "components/git-graph.typ": branch_indicator, commit_node, connect_nodes, branch
 
 = Git Basics Theory
 == Introduzione
@@ -128,7 +128,7 @@ Il flusso di lavoro più comune è il seguente:
             )
         ]
     ],
-    caption: [Workflow Diagram]
+    caption: [Simple Workflow Diagram]
 )<workflow>
 
 

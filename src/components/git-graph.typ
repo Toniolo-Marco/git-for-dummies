@@ -1,36 +1,27 @@
-#import "@preview/fletcher:0.5.1" as fletcher: diagram, node, edge, shapes
+#import "@preview/fletcher:0.5.1" as fletcher: diagram, node, edge, shapes, draw
 #import fletcher.shapes: diamond
+#import "double-label.typ" : double_label
+#import "utils.typ": alignment_to_coordinates, generate_label
 
-#let alignment_to_coordinates(alignment) = {
-    if alignment == bottom {
-        (0, 1)
-    } else if alignment == top {
-        (0, -1)
-    } else if alignment == left {
-        (-1, 0)
-    } else if alignment == right {
-        (1, 0)
-    } else {
-        (0, 0)
-    }   
-}
-
-#let generate_label(branch:"",commit-number:0) = {
-    return label(branch + "_" + str(commit-number))
-}
-
-#let branch_indicator(name, start, color) = {
+#let branch_indicator(name, start, color, remote, lbl_stroke: (1pt+white)) = {
     let near = (start.at(0)+0.25,start.at(1))
-    node(near, [#name], corner-radius: 2pt, fill: color, stroke: none)
+    if remote == none {
+        // Single label node
+        node(near, [#name], corner-radius: 2pt, fill: color, stroke: lbl_stroke)
+    } else {
+        // Double label node
+        node(near,double_label((name,remote),lbl_stroke).node,inset:0pt, corner-radius:3pt, fill: color, stroke: lbl_stroke)
+    }
 }
 
-#let double_node(position, color, out_radius, inner_radius, name) = {
+#let commit_node(position, color, out_radius, inner_radius, name) = {
     node(position, "", name: name, radius: out_radius, stroke: color,extrude: 0, outset: 0.099em)
     node(position, "", name: name, radius: inner_radius, fill: color, stroke: none)
 }
 
 #let branch(
     name:"",
+    remote: none,
     indicator-xy:none,
     color:black,
     start:(0,1),
@@ -44,9 +35,9 @@
 
     // branch indicator
     if indicator-xy != none {
-        branch_indicator(name, indicator-xy, color)
+        branch_indicator(name, indicator-xy, color, remote)
     } else {
-        branch_indicator(name, start, color)
+        branch_indicator(name, start, color, remote)
     }
 
     let x = start.at(0) + 1 // x node coordinate
@@ -65,9 +56,9 @@
             
             // draw the node
             if(head != none and i == head) {
-                double_node((x,start.at(1)),color,nodes_out_radius,nodes_out_radius,lbl)
+                commit_node((x,start.at(1)),color,nodes_out_radius,nodes_out_radius,lbl)
             } else {
-                double_node((x,start.at(1)),color,nodes_out_radius,nodes_inner_radius,lbl)
+                commit_node((x,start.at(1)),color,nodes_out_radius,nodes_inner_radius,lbl)
             }
 
             // make the message
