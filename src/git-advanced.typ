@@ -125,7 +125,7 @@ In questo caso vogliamo combinare i 3 commit in un unico commit, quindi averne u
 
 #image("img/rebase-git-lens-2.png")
 
-A questo punto salviamo e *chiudiamo la scheda*, ora il procedimento interattivo ci proporrà opzioni differenti in base alle scelte appena fatte. In questo caso ci chiede di scrivere il messaggio del commit che conterrà i 3 commit combinati. Si presenterà un file in una scheda di questo tipo:
+A questo punto salviamo e *chiudiamo la scheda*, ora il procedimento interattivo ci proporrà opzioni differenti in base alle scelte appena fatte. In questo caso apre il file il file `COMMIT_EDITMSG` ci chiede di scrivere il messaggio del commit che conterrà i 3 commit combinati. Si presenterà un file in una scheda di questo tipo:
 
 ```bash
 added 1
@@ -230,6 +230,7 @@ Dunque utilizziamo `git switch add-letters` e poi `git rebase -i HEAD~5`... alla
                 start:(1,0),
                 indicator-xy: (2.75,0),
                 length: 1,
+                angle: 45deg,
                 commits: ("added some\n numbers",),
                 alignment: top
             ),
@@ -244,6 +245,7 @@ Dunque utilizziamo `git switch add-letters` e poi `git rebase -i HEAD~5`... alla
                 length: 1,
                 head:0,
                 alignment: bottom,
+                angle: 45deg,
                 commits:(
                     "added multiple \n\"A\"",)
             ),
@@ -307,7 +309,7 @@ Fin'ora però abbiamo sempre lavorato su branch locali, come possiamo fare per i
             // remote add-letters branch
             connect_nodes((1,0),(2,2),green),
             branch(
-                name:"remote/add-letters",
+                name:"my-fork/add-letters",
                 color:green,
                 start:(1,2),
                 length: 3,
@@ -321,3 +323,173 @@ Fin'ora però abbiamo sempre lavorato su branch locali, come possiamo fare per i
     ]
 ]\
 \
+
+Notiamo che il branch in remoto non si aggiorna in automaticamente. Se tentiamo di effettuare un `git push my-fork`, otterremo una cosa simile:
+
+```bash
+➜ git push my-fork    
+To https://github.com/account/repo.git
+ ! [rejected]        add-letters -> add-letters (non-fast-forward)
+error: failed to push some refs to 'https://github.com/account/repo.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+```
+
+Seguire i suggerimenti in questo caso non ci porterà da nessuna parte: per lo stesso motivo per cui il `push` non ha funzionato, non funzionerà nemmeno il comando: `git pull myfork add-letters`. Mostriamo comunque di seguito il procedimento suggerito da git:
+
+```bash
+➜ git pull my-fork add-lettersers             
+From https://github.com/account/repo
+ * branch            add-letters -> FETCH_HEAD
+hint: You have divergent branches and need to specify how to reconcile them.
+hint: You can do so by running one of the following commands sometime before
+hint: your next pull:
+hint:
+hint:   git config pull.rebase false  # merge
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint:
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+fatal: Need to specify how to reconcile divergent branches.
+```
+
+Se diamo i tre comandi consigliati e ritentiamo il pull, otterremo:
+
+```bash
+➜ git pull my-fork add-letters
+From https://github.com/account/repo
+ * branch            add-letters -> FETCH_HEAD
+hint: Diverging branches can't be fast-forwarded, you need to either:
+hint:
+hint:   git merge --no-ff
+hint:
+hint: or:
+hint:
+hint:   git rebase
+hint:
+hint: Disable this message with "git config advice.diverging false"
+fatal: Not possible to fast-forward, aborting.
+```
+
+Come abbiamo già visto in precedenza il merge produrrebbe un commit di merge, mentre il rebase aggiungerebbe uno dei due branch sopra all'altro; nessuna di queste soluzioni è quella che stiamo cercando.
+
+In questo caso la soluzione più semplice e *rischiosa* è _riscrivere la storia_; ovvero utilizzare l'opzione `--force` di `git push`. Questo riscriverà completamente la storia della remote Repository e porterà il corrispondente branch remoto allo stesso commit di quello locale, ottenendo:  
+
+\
+#align(center)[
+    #scale(90%,x:85%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+            
+            branch(
+                name:"main",
+                color:blue,
+                start:(0,0)
+            ),
+
+            // add-numbers branch
+            connect_nodes((1,0),(2,0),yellow),
+            branch(
+                name:"add-numbers",
+                color:yellow,
+                start:(1,0),
+                indicator-xy: (2.75,0),
+                length: 1,
+                commits: ("added some\n numbers",),
+                alignment: top
+            ),
+
+            // add-letters branch
+            connect_nodes((1,0),(3,1),orange),
+            branch(
+                name:"add-letters",
+                remote:"my-fork",
+                color:orange,
+                start:(2,1),
+                indicator-xy: (4,1),
+                length: 1,
+                head:0,
+                alignment: bottom,
+                commits:("added multiple \n\"B\"",)
+            ),
+
+        )
+    ]
+]\
+\
+
+È importante notare che se altre persone stanno utilizzando quel branch remoto non potranno più pushare su quello stesso branch, se non forzando a loro volta e così via. Una soluzione più "sicura" sarebbe creare un branch locale e spostarsi su quello prima di effettuare il rebase. In questo modo, dopo il rebase, avremo:
+
+\
+#align(center)[
+    #scale(90%,x:85%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+            
+            branch(
+                name:"main",
+                color:blue,
+                start:(0,0)
+            ),
+
+            // add-numbers branch
+            connect_nodes((1,0),(2,0),yellow),
+            branch(
+                name:"add-numbers",
+                color:yellow,
+                start:(1,0),
+                indicator-xy: (2.75,0),
+                length: 1,
+                commits: ("added some\n numbers",),
+                alignment: top
+            ),
+
+            // local branch
+            connect_nodes((1,0),(5,1),orange),
+            branch(
+                name:"local-branch",
+                // remote:"origin",
+                color:orange,
+                start:(4,1),
+                indicator-xy: (4.75,0.5),
+                length: 1,
+                head:0,
+                alignment: bottom,
+                commits:("added multiple \n\"B\"",)
+            ),
+
+            // remote add-letters branch
+            connect_nodes((1,0),(2,2),green),
+            branch(
+                name:"add-letters",
+                remote:"my-fork",
+                color:green,
+                start:(1,2),
+                length: 3,
+                alignment: bottom,
+                commits: (
+                    "added multiple \n\"A\"",
+                    "removed all \n\"A\"",
+                    "added multiple \n\"B\"")
+            ),
+        )
+    ]
+]\
+\
+
+Questo inoltre ci permette di mantenere i commit intermedi in caso di necessita: elimineremo il branch una volta che non ci serviranno più.
+
+
