@@ -41,20 +41,25 @@
 #pagebreak() // Avoid starting behind the cover
 #pagebreak()
 
-#outline()
+#show outline.entry.where(
+  level: 1
+): it => {
+  v(12pt, weak: true)
+  strong(it)
+}
+
+#outline(depth: 2, title: "Indice", indent: auto)
 #pagebreak()
 
 #include "git-basics-theory.typ"
 
 #include "git-basics-practice.typ"
 
+#include "git-advanced.typ"
+
 #include "roles-duties.typ"
 
 #include "organization.typ"
-
-#include "inviter.typ"
-
-#include "git-advanced.typ"
 
 #include "inviter.typ"
 

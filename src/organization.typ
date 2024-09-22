@@ -78,3 +78,15 @@ Dopo che un GM ha approvato la PR (pull request), il codice proposto viene mergi
 === Pubblicazione della nuova versione
 
 Dopo aver accettato una PR, è consigliabile incrementare la versione del common crate modificando il cargo.toml e successivamente pubblicando la nuova versione.
+
+= Software fair e congelamento del repository
+
+Il professore ad certo punto in accordo col Working group coordinator, fisserà la data della software fair, lo svolgimento dell'evento verrà ampiamente spiegato a lezione, quello che è importante ai fini di questa guida è che il repository, il giorno prima di quella data deve essere *archiviato* e messo in readonly per prevenire ulteriori modifiche. L'ideale sarebbe che tutte le pr approvate vengano mergiate prima di tale date, il codice testato, le specifiche ultimate e che venga creata la release finale, è fondamentale anche a costo di tagliare qualche feature, che la release sia il più stabile e funzionante possibile perchè dopo tale data anche in caso emergano bug *non si potrà modificare*.
+
+== Come archiviare il repository
+
+Per prima cosa andate sulla pagina principale del repository, poi cliccate su *Settings*, *General*, scorrete *a fine pagina* e in fine *Archive this repository*, vi verrà richiesta la conferma e in fine il repository sarà in sola lettura, questo include:
+- Pull request
+- Contenuto
+- Actions
+- Issue
