@@ -75,7 +75,7 @@ Esaminiamo le azioni:
 
 == Branch
 
-I branch sono utilizzati per lavorare su funzionalità diverse o bugfix separati dal ramo principale (`main` o `master`). Attraverso L'uso dei branch oltre che mantenere una corretta organizzazione del progetto, ci permette di lavorare in parallelo su più funzionalità senza interferire con il lavoro degli altri membri del team.
+I branch sono utilizzati per lavorare su funzionalità diverse o bugfix separati dal ramo principale (`main` o `master`). Attraverso l'uso dei branch oltre che mantenere una corretta organizzazione del progetto, ci permette di lavorare in parallelo su più funzionalità senza interferire con il lavoro degli altri membri del team.
 
 I branch possono essere creati, rinominati, spostati, uniti (_merge_) e cancellati. Il merge come si può intuire è un'operazione chiave, che permette di unire le funzionalità sviluppate in due branch diversi in uno solo, o di portare le modifiche di un branch nel branch principale.
 

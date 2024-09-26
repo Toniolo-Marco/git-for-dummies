@@ -56,4 +56,11 @@
 
 #include "git-advanced.typ"
 
+<<<<<<< HEAD
 #include "actions.typ"
+=======
+#include "inviter.typ"
+
+#include "actions.typ"
+
+>>>>>>> 8ee9523 (git amend sub-chapter, fixed stroke in git graph)

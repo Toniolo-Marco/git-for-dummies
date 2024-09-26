@@ -84,7 +84,12 @@
     }
 }
 
-#let connect_nodes(start, end, color) = {
-    edge(start, end, stroke: 2pt+color, bend: -20deg)   
+#let connect_nodes(start, end, edge_stroke) = {
+    if type(edge_stroke) == color {
+        edge(start, end, stroke: 2pt+edge_stroke, bend: -20deg)
+    }
+    else if type(edge_stroke) == stroke {
+        edge(start, end, edge_stroke,bend: -20deg)
+    }
 }
     

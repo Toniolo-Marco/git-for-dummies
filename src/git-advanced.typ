@@ -5,6 +5,17 @@
 
 #show ref: it => emph(text(blue)[#it])
 
+= Git Advanced
+
+== Log
+
+//TODO: Git reflog
+
+
+//TODO: Other merging strategies
+
+
+
 == Squash
 
 Spesso potremmo  aver fatto commit non necessari, o vorremmo avere un solo commit per la feature che stiamo sviluppando; in modo da avere una storia più pulita e comprensibile e delle PR che non contengono commit inutili. L'idea è di trasformare il flusso di lavoro visto in @workflow[Figura], in un flusso di lavoro simile:

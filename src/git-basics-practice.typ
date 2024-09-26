@@ -1,3 +1,8 @@
+#import "@preview/fletcher:0.5.1" as fletcher: diagram, node, edge, shapes
+#import fletcher.shapes: diamond
+#import "components/gh-button.typ": gh_button
+#import "components/git-graph.typ": branch_indicator, commit_node, connect_nodes, branch
+
 = Pratica
 
 == Configurare Git
@@ -8,7 +13,7 @@ git config --global user.name "name"
 git config --global user.email "your@email"
 ```
 
-== Inizializzare un nuovo repository
+== Inizializzare un nuovo repository <init-repo>
 
 Per creare un nuovo progetto con Git, spostati nella directory del tuo progetto e inizializza un repository con il comando 
 #footnote("Ignoriamo per ora l'output che verrà analizzato in seguito"):
@@ -40,6 +45,7 @@ Questo passaggio richiede l'aver già creato l'organizzazione alla quale apparte
     git remote add origin https://github.com/Advanced-Programming-2023/test.git
     git push -u origin main
     ```
+    
 
     Il primo comando crea un file chiamato README.md, se non esiste già e aggiunge la stringa "\# title" al suo contenuto. (Il simbolo "\#" in Markdown indica un titolo). Gli altri comandi verranno spiegati nei prossimi capitoli.
 
@@ -53,13 +59,23 @@ Per portare i file modificati dalla directory di lavoro all'area di staging, usi
 
 == Difetti di Git
 
-Durante lo sviluppo di git, sono sviluppate diverse funzionalità molto utili e nel tempo sono state aggiunte quasi tutte al comando `git checkout`. Attualmente il team di Git, sta lavorando per separare queste funzionalità in comandi distinti.
+#grid(
+    columns: (3fr,2fr), 
+    
+    [
+        Durante lo sviluppo di git, sono sviluppate diverse funzionalità molto utili e nel tempo sono state aggiunte quasi tutte al comando `git checkout`. Attualmente il team di Git, sta lavorando per separare queste funzionalità in comandi distinti.
 
-Allo stesso anche in altri casi troveremo comandi diversi che hanno lo stesso scopo. In questo documento vedremo entrambe le versioni per completezza; tuttavia è consigliabile utilizzare i comandi più recenti.
+        Allo stesso anche in altri casi troveremo comandi diversi che hanno lo stesso scopo. In questo documento vedremo entrambe le versioni per completezza; tuttavia è consigliabile utilizzare i comandi più recenti.
 
-Per dare subito un esempio di questo problema, analizziamo il caso in cui vogliamo vedere l'attuale stato in cui ci troviamo.
+        Per dare subito un esempio di questo problema, analizziamo il caso in cui vogliamo vedere l'attuale stato in cui ci troviamo.
+    ],
+    figure(
+        image("img/graphical-representation-git-checkout.png"), 
+        caption: [Rappresentazione grafica del comando `git checkout`]
+    )
+)
 
-== Analizzare lo stato del repository
+== Analisi
 
 Per visualizzare la lista dei file nella staging area e altre informazioni generiche, possiamo usare il comando:
 
@@ -105,13 +121,13 @@ M       src/git-basics-theory.typ                   #
 Your branch is up to date with 'origin/git-basics'. #
 ```
 
-== Analizzare le Modifiche
+== Analisi delle Modifiche
 
 Oltre allo stato per esaminare tutte le differenze tra i file dell'ultimo commit e gli attuali possiamo utilizzare il comando `git status -vv`, abbreviazione di `git status -v -v`. 
 Alternativamente possiamo utilizzare `git diff @` dalla versione 1.8.5, o `git diff HEAD` per versioni precedenti.
 #footnote([Nessuno dei due mostra il contenuto dei file *untracked*; `git stastus -vv` mostra solo che esistono])
 
-Con `HEAD` si fa riferimento all'ultimo commit effettuato.
+Con `HEAD` si fa riferimento all'ultimo commit in cui ci troviamo.
 
 Se abbiamo apportato modifiche a più file, risulterebbe molto utile avere un controllo granulare sulle differenze che vogliamo visualizzare:
   - Per visualizzare le modifiche apportate sul singolo file possiamo utilizzare il comando `git diff <nomefile>`.
@@ -148,6 +164,77 @@ git commit-all -m "Messaggio descrittivo delle modifiche"
 
 Per approfondire l'argomento degli alias, consigliamo di consultare la #link("https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases")[documentazione ufficiale di Git].
 
+=== Amend
+
+Attraverso il comando `git commit --amend` possiamo modificare l'ultimo commit che abbiamo effettuato. Questo ci permette sia di modificare il messaggio del commit, sia di aggiungere file che attualmente sono in stage al commit precedente; anziché creare un nuovo commit.
+
+L'idea è quindi di trasformare una situazione come questa:
+
+#align(center)[
+    #scale(90%)[
+
+        #v(5%)
+
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+            
+            branch( // main branch
+                name:"main",
+                color:blue,
+                start:(0,1),
+                length:3,
+                commits:("init commit","second commit","unneeded commit",),
+                head:2
+            ),
+
+            edge((3,1),(4,1),"--",stroke:2pt+blue,label-pos:1,`some staged files`),
+        )
+
+        #v(5%)
+
+
+    ]
+]
+
+In questa:
+
+
+#align(center)[
+    #scale(90%)[
+
+        #v(5%)
+
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+            
+            branch( // main branch
+                name:"main",
+                color:blue,
+                start:(0,1),
+                length:3,
+                commits:("init commit",
+                "second commit",
+                "renamed message\nall changes",),
+                head:2
+            ),
+        )
+
+        #v(5%)
+    ]
+]
+
+Per _aggiungere_ file in stage al commit precedente, è sufficiente lanciare il comando `git add <file>` (se non abbiamo già i file interessati in staging area) e successivamente `git commit --amend`. A questo punto si presenterà il file di modifica del commit nel nostro editor predefinito, qui possiamo modificare il messaggio del commit, leggere i cambiamenti apportati. Una volta salvato il file e chiuso, il commit verrà modificato.
+
+Se invece necessitiamo solo di _rinominare_ il commit, è sufficiente il comando `git commit --amend -m "changed message"` senza alcun file in staging area.
+
+Ovviamente questo comando non è sfruttabile per _correggere_ commit già pushati su un repository remoto, vedremo come superare anche questo ostacolo nei successivi capitoli.
 
 === Co-author in commit
 
@@ -164,24 +251,163 @@ Co-authored-by: ANOTHER-NAME <ANOTHER-NAME@EXAMPLE.COM>"
 
 Per ulteriori informazionei consultare la #link("https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors")[documentazione ufficiale di GitHub].
 
+== Branch
+
+Le opzioni e operazioni sui branch sono moltissime, di seguito elenchiamo le più utili.
+
+=== Creare un Nuovo Branch
+
+Per creare un nuovo branch, possiamo usare il comando: `git switch -c <new-branch> [<start-point>]`.
+#footnote([Con `[start-point]` s'intente l'hash commit da cui partire; le parentesi quadre indicano che è opzionale.])
+Questo comando crea un nuovo branch e ci sposta su di esso. Alternativamente possiamo usare i comandi: `git checkout -b <new_branch> [<start_point>]` o `git branch <new_branch> [<start_point>]`.
+#footnote([L'ultima opzione non ci sposterà automaticamente sul nuovo branch])
+
+=== Rinominare un Branch
+
+Riprendendo subito il suggerimento ricevuto da GitHub nella @init-repo[Sezione] il comando: `git branch -M main` è opzionale, semplicemenete rinomina il branch principale come _main_ che lasciarlo a _master_; sta a voi scegliere se lanciare questo comando rinominandolo. Lo stesso comando può essere usato per rinominare un branch qualsiasi.
+
+=== Eliminare un Branch
+
+Per eliminare un branch, possiamo usare il comando: `git branch -d <branch-name>`.
+#footnote([Per forzare l'eliminazione di un branch, utilizzare l'opzione `-D` al posto di `-d`])
+
+=== Spostarsi tra Branch
+
+Per spostarsi su un branch diverso, è sufficiente usare il comando: `git switch <branch-name>` o `git checkout <branch-name>`. 
+
+Prima di proseguire con la spiegazione, è importante capire meglio concetto di HEAD. L'_HEAD_ è un *puntatore* che punta al commit attuale e consecutivamente il contenuto della working directory.
+Nei grafici che seguono, l'HEAD è rappresentata dal commit con il cerchio completamente riempito.
+
+Dunque, ciò che otteniamo è che l'HEAD si sposterà sul commit relativo al branch selezionato; per esempio ci troviamo sul branch _main_ e volessimo spostarci sul branch _develop_, il comando sarebbe: `git switch develop` o `git checkout develop`.
+
+Visivamente il cambiamento sarebbe questo:
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+            
+            branch(
+                name:"main",
+                color:blue,
+                start:(0,0),
+                length:5,
+                head:4
+                ),
+            // edge((5,0),(6,0),"--",stroke:2pt+blue),
+            // //... other commits
+            
+            // develop branch
+            connect_nodes((1,0),(2,1),orange),
+            branch(
+                name:"develop",
+                indicator-xy:(7,1),
+                color:orange,
+                start:(1,1),
+                length:5,
+            )            
+        )
+
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+            
+            branch(
+                name:"main",
+                color:blue,
+                start:(0,0),
+                length:5),
+
+            // develop branch
+            connect_nodes((1,0),(2,1),orange),
+            branch(
+                name:"develop",
+                indicator-xy:(7,1),
+                color:orange,
+                start:(1,1),
+                length:5,
+                head:4
+            )            
+        )
+    ]
+]
+
+=== Spostarsi tra Commit
+
+In modo analogo, possiamo spostarci su un commit specifico con il comando: `git switch <commit-hash>` o `git checkout <commit-hash>`. Questo comando ci permette di spostare l'HEAD su un commit specifico, tuttavia ci troveremo in uno stato chiamato _detached HEAD_.
+
+Il detached HEAD è uno stato in cui l'HEAD non punta a nessun branch, ma direttamente ad un commit. Questo significa che se creiamo un nuovo commit in questo stato, non verrà aggiunto a nessun branch e potrebbe essere perso.
+
+Una rappresentazione visiva di questo stato è la seguente:
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+            
+            branch( // main branch
+                name:"main",
+                color:blue,
+                start:(0,1),
+                length:5,
+            ),
+
+            connect_nodes((3,1),(4,2),orange),
+            branch( // develop branch
+                name:"develop",
+                color:orange,
+                start:(3,2),
+                length:5,
+            ),
+
+            connect_nodes((3,0),(2,1),red),
+            branch(// detached HEAD commits
+                color: red, 
+                start:(2,0),
+                length:3,
+            )
+        )
+    ]
+]
+
+== Unire due branch
+
+In questa sezione copriremo solo il metodo di merge, in quanto è il più sicuro e veloce.
+
+
 == Gestione dei Remote Repository
 
-Come si può intuire il primo comando suggerito aggiungerà l'URL come repository remote, con il nome *origin*. Per avere informazioni sui remote possiamo servirci di diversi comandi:
+Per avere informazioni sui remote possiamo servirci di diversi comandi:
 
-    ```
-    ➜ git remote show              #show the name of all remotes
-        origin
-    ➜ git remote show origin       #show info about one remote
-        * remote origin
-        Fetch URL: https://github.com/nome-organizzazione/nome-repo.git
-        Push  URL: https://github.com/nome-organizzazione/nome-repo.git
-        HEAD branch: (unknown)
-    ➜ git remote -v                #show info about all remotes
-        origin	https://github.com/nome-organizzazione/nome-repo.git (fetch)
-        origin	https://github.com/nome-organizzazione/nome-repo.git (push)
-    ```
+```bash
+➜ git remote show              #show the name of all remotes
+    origin
+➜ git remote show origin       #show info about one remote
+    * remote origin
+    Fetch URL: https://github.com/nome-organizzazione/nome-repo.git
+    Push  URL: https://github.com/nome-organizzazione/nome-repo.git
+    HEAD branch: (unknown)
+➜ git remote -v                #show info about all remotes
+    origin	https://github.com/nome-organizzazione/nome-repo.git (fetch)
+    origin	https://github.com/nome-organizzazione/nome-repo.git (push)
+```
 
-6. Il secondo comando suggerito (`git branch -M main`) è opzionale, git nomina il branch di default come _master_ invece che come _main_; sta a voi scegliere se lanciare questo comando rinominandolo. 
+
+Come si può intuire il comando suggerito da GitHub: `git remote add origin URL`, (visto nella @init-repo[Sezione]) aggiungerà l'URL come repository remote, con il nome *origin*. 
+
+
+
+
 
 
 
