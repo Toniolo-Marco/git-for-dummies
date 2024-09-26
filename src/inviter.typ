@@ -45,6 +45,6 @@ docker compose logs
 ```
 il risultato dovrebbe essere:
 ```
-Server is running on http://127.0.0.1:8080
+Server is running on http://127.0.0.1:80
 ```
 L'ideale ora sarebbe esporre l'inviter dietro ad un reverse proxy il quale dovrebbe occuparsi di https, se invece volete esporlo direttamente vi consigliamo caldamene configurare tls tramite gli appositi parametri, seguite il README.md sulla pagina GitHub per tutte le informazioni.])
