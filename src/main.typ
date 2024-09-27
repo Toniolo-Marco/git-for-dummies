@@ -27,15 +27,12 @@
 //   text(fill: rgb("#a2aabc"), it)
 // )
 
-
 #set quote(block: true)
 #show quote: set align(center)
 
 #show link: underline
 
-
 #include "cover.typ"
-
 
 // Table of contents
 #pagebreak() // Avoid starting behind the cover
@@ -56,6 +53,8 @@
 #include "git-basics-practice.typ"
 
 #include "git-advanced.typ"
+
+#pagebreak()
 
 #include "roles-duties.typ"
 
