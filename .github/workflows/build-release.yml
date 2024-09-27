@@ -20,7 +20,8 @@ jobs:
         shell: bash
         run: |
           # compile the main file
-          typst compile --root=./ --font-path=./src/fonts/segoe-ui-this src/main.typ git-for-dummies.pdf
+          typst update
+          typst compile src/main.typ --root=./ --font-path=${{ github.workspace }}/src/fonts/noto-sans
 
       - name: Delete previous release
         id: deletePreviuosRelease
@@ -44,7 +45,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ github.workspace }}/git-for-dummies.pdf
+          file: ${{ github.workspace }}/src/main.pdf
           asset_name: Git-for-Dummies.pdf
           overwrite: true
           body: "Brief introduction to using git, GitHub and managing an organization for Professor Patrignani's Advanced Programming course"

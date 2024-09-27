@@ -9,7 +9,7 @@
 				"--exts",
 				"typ",
 				"--",
-				"\"typst compile main.typ --root=../ --font-path=${workspaceFolder}/src/fonts/segoe-ui-this\""
+				"\"typst compile main.typ --root=../ --font-path=${workspaceFolder}/src/fonts/noto-sans\""
 			],
 			"options": {
 				"cwd": "${workspaceFolder}/src/"
