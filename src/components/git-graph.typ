@@ -3,7 +3,7 @@
 #import "double-label.typ" : double_label
 #import "utils.typ": alignment_to_coordinates, generate_label
 
-#let branch_indicator(name, start, color, remote, lbl_stroke: (1pt+white)) = {
+#let branch_indicator(name, start, color, remote: none, lbl_stroke: (1pt+white)) = {
     let near = (start.at(0)+0.25,start.at(1))
     if remote == none {
         // Single label node
@@ -35,9 +35,9 @@
 
     // branch indicator
     if indicator-xy != none {
-        branch_indicator(name, indicator-xy, color, remote)
+        branch_indicator(name, indicator-xy, color,remote: remote)
     } else {
-        branch_indicator(name, start, color, remote)
+        branch_indicator(name, start, color, remote: remote)
     }
 
     let x = start.at(0) + 1 // x node coordinate
@@ -84,11 +84,11 @@
     }
 }
 
-#let connect_nodes(start, end, edge_stroke) = {
+#let connect_nodes(start, end, edge_stroke, bend: -20deg) = {
     if type(edge_stroke) == color {
-        edge(start, end, stroke: 2pt+edge_stroke, bend: -20deg)
+        edge(start, end, stroke: 2pt+edge_stroke, bend: bend)
     }
     else if type(edge_stroke) == stroke {
-        edge(start, end, edge_stroke,bend: -20deg)
+        edge(start, end, edge_stroke,bend: bend)
     }
 }

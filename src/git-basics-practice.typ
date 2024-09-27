@@ -380,9 +380,94 @@ Una rappresentazione visiva di questo stato è la seguente:
     ]
 ]
 
-== Unire due branch
+== Merge
 
-In questa sezione copriremo solo il metodo di merge, in quanto è il più sicuro e veloce.
+Per combinare le funzionalità implementate in 2 branch diversi, esistono diverse tecniche; in questa sezione copriremo solo il metodo di merge, in quanto è il più _sicuro_ e _semplice_.
+
+Nel capitolo riguardante la teoria, abbiamo visto il workflow (@workflow[Figure]) che vogliamo ottenere. Ci sono diverse situazioni in cui ci possiamo trovare: se il branch che vogliamo unire non ha subito modifiche durante lo sviluppo della nostra feature, il merge sarà detto _fast-forward_.
+#footnote([Si presuppone che l'etichetta del branch `main` sia sempre sull'ultimo commit _blu_. Ogni plug-in o rappresentazione grafica rappresenta i branch in maniera leggermente differente])
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // main branch
+                name:"main",
+                color:blue,
+                start:(0,1),
+                length:3,
+            ),
+
+            connect_nodes((3,1),(4,2),orange),
+            branch( // feature branch
+                name:"feature",
+                color:orange,
+                start:(3,2),
+                length:3,
+                head: 2,
+            ),
+        )
+    ]
+]
+
+In situazioni simili siamo sicuri che non si presenteranno conflitti di merge, e questo potrà avvenire con i comandi: `git switch main`, seguito da `git merge feature`. Così facendo otterremo un albero simile a questo:
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // main branch
+                name:"main",
+                color:blue,
+                start:(0,1),
+                length:6,
+                head: 5
+            ),
+            branch_indicator("feature", (0,1.5), blue)
+        )
+    ]
+]
+
+Cosa accadrebbe se invece avessimo una situazione simile a questa?
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // main branch
+                name:"main",
+                color:blue,
+                start:(0,1),
+                length:3,
+            ),
+
+            connect_nodes((3,1),(4,1),green, bend:20deg),
+            branch( // feature 1 branch
+                name:"feature 1",
+                indicator-xy: (3.25,1.5),
+                color:green,
+                start:(3,1),
+                length:3,
+                head: 2,
+            ),
+        )
+    ]
+]
 
 
 == Gestione dei Remote Repository
