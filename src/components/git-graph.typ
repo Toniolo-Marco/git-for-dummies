@@ -1,6 +1,6 @@
 #import "@preview/fletcher:0.5.1" as fletcher: diagram, node, edge, shapes, draw
 #import fletcher.shapes: diamond
-#import "double-label.typ" : double_label
+#import "multi-label.typ" : multi_label
 #import "utils.typ": alignment_to_coordinates, generate_label
 
 #let branch_indicator(name, start, color, remote: none, lbl_stroke: (1pt+white)) = {
@@ -8,9 +8,13 @@
     if remote == none {
         // Single label node
         node(near, [#name], corner-radius: 2pt, fill: color, stroke: lbl_stroke)
-    } else {
+    } else if type(remote) == "string" {
         // Double label node
-        node(near,double_label((name,remote),lbl_stroke).node,inset:0pt, corner-radius:3pt, fill: color, stroke: lbl_stroke)
+        node(near,multi_label((name,remote),lbl_stroke).node,inset:0pt, corner-radius:3pt, fill: color, stroke: lbl_stroke)
+    } else if type(remote) == array {
+        // Multi label node
+        remote.insert(0,name)
+        node(near,multi_label(remote,lbl_stroke).node,inset:0pt, corner-radius:3pt, fill: color, stroke: lbl_stroke)
     }
 }
 

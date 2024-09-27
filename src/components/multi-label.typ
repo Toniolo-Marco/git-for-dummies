@@ -28,7 +28,7 @@
   (node: tbl, anchors: anchor_pos)
 }
 
-#let double_label(array, stroke) = {
+#let multi_label(array, stroke) = {
   let separator = ("", 0mm);
 
   // Transform each element of the array into a tuple with length.
