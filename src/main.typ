@@ -27,26 +27,34 @@
 //   text(fill: rgb("#a2aabc"), it)
 // )
 
-
 #set quote(block: true)
 #show quote: set align(center)
 
 #show link: underline
 
-
 #include "cover.typ"
-
 
 // Table of contents
 #pagebreak() // Avoid starting behind the cover
 #pagebreak()
 
-#outline()
+#show outline.entry.where(
+  level: 1
+): it => {
+  v(12pt, weak: true)
+  strong(it)
+}
+
+#outline(depth: 2, title: "Indice", indent: auto)
 #pagebreak()
 
 #include "git-basics-theory.typ"
 
 #include "git-basics-practice.typ"
+
+#include "git-advanced.typ"
+
+#pagebreak()
 
 #include "roles-duties.typ"
 
@@ -54,13 +62,4 @@
 
 #include "inviter.typ"
 
-#include "git-advanced.typ"
-
-<<<<<<< HEAD
 #include "actions.typ"
-=======
-#include "inviter.typ"
-
-#include "actions.typ"
-
->>>>>>> 8ee9523 (git amend sub-chapter, fixed stroke in git graph)

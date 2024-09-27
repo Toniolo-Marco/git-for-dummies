@@ -92,4 +92,3 @@
         edge(start, end, edge_stroke,bend: -20deg)
     }
 }
-    

@@ -502,5 +502,3 @@ In questo caso la soluzione più semplice e *rischiosa* è _riscrivere la storia
 \
 
 Questo inoltre ci permette di mantenere i commit intermedi in caso di necessita: elimineremo il branch una volta che non ci serviranno più.
-
-
