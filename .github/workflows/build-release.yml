@@ -9,6 +9,7 @@ on:
 
 jobs:
   Build_And_Release:
+    timeout-minutes: 720
     runs-on: [self-hosted, typst]
     steps:
       - name: Checkout

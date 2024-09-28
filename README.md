@@ -1,6 +1,7 @@
-# git-for-dummies
+# Git for dummies
 
 Una piccola guida su come organizzare e gestire il repository per il corso di Advanced Programming, su come usare git, Github e le GitHub Actions.
+Il file pdf è disponibile nella sezione Releases a destra.
 
 # Typst per VS Code (Linux)
 
@@ -15,3 +16,4 @@ Per compilare automaticamente il file `main.typ`, con i file dei capitoli aggior
 Per avere una preview del file `main.typ` è utile utilizzare l'estensione [Tinymist](https://marketplace.visualstudio.com/items?itemName=myriad-dreamin.tinymist) di VS Code.
 
 Un'altra estensione consigliata per visualizzare i PDF all'interno di VS Code è [VS Code PDF](https://marketplace.visualstudio.com/items?itemName=tomoki1207.pdf).
+  

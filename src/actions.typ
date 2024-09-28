@@ -27,7 +27,7 @@ Ecco un esempio di file di configurazione:
 ```yaml
 name: Test Rust Library
 
-= Il workflow viene eseguito ogni volta che si fa un push o una pull request sul branch main
+# Il workflow viene eseguito ogni volta che si fa un push o una pull request sul branch main
 on:
   push:
     branches:
@@ -36,25 +36,25 @@ on:
     branches:
       - main
 
-= Definizione dei job (compiti) da eseguire
+# Definizione dei job da eseguire
 jobs:
   build:
-    = Esegui il job su ubuntu (hostato da GitHub)
+    # Esegui il job su ubuntu (hostato da GitHub)
     runs-on: ubuntu-latest
 
     steps:
-      = Step 1: Checkout del repository
+      # Step 1: Checkout del repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      = Step 2: Imposta la versione di Rust desiderata
+      # Step 2: Imposta la versione di Rust desiderata
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: ${{ matrix.rust }}
           override: true
 
-      = Step 3: Esegui i test
+      # Step 3: Esegui i test
       - name: Run tests
         run: cargo test --verbose
 ```
