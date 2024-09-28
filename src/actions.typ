@@ -71,14 +71,14 @@ jobs:
 
 
 come detto in precedenza le GitHub Actions sono uno strumento potente e flessibile per automatizzare flussi di lavoro legati allo sviluppo, dalla CI/CD ai controlli di sicurezza, all'aggiornamento della documentazione. I runner consentono l'esecuzione dei job su macchine virtuali fornite da GitHub o su macchine fisiche configurate dall'utente, offrendo sia convenienza che flessibilità. Il workflow di esempio per Rust mostra come eseguire automaticamente i test inclusi nel vostro progetto di Rust. Come detto prima, questo workflow viene eseguito su un runner hostato da GitHub, il quale offre solo un tot di ore gratutite ogni mese per eseguire le action, per questo più avanti spiegheremo come hostare i propri runner per avere esecuzioni illimitate e maggior controllo sull'ambiente.
-Per approfondire e imparare a scrivere actions specifiche il posto da cui iniziare è la documentazione ufficiale, che potete trovare #link("https://docs.github.com/en/actions")[qui], se invece volete una quick start guide vi consigliamo il tutorial del sito dev.to intitolato #link("https://dev.to/kanani_nirav/getting-started-with-github-actions-a-beginners-guide-og7")[Getting Started with GitHub Actions: A Beginner’s Guide] #footnote([Stranamente ChatGPT si dimostra molto utile nella stesura delle actions, spesso riesce a dare la struttura generale del workflow e risparmiandovi un pò di tempo.])
+Per approfondire e imparare a scrivere Actions specifiche il posto da cui iniziare è la documentazione ufficiale, che potete trovare #link("https://docs.github.com/en/actions")[qui], se invece volete una quick start guide vi consigliamo il tutorial del sito dev.to intitolato #link("https://dev.to/kanani_nirav/getting-started-with-github-actions-a-beginners-guide-og7")[Getting Started with GitHub Actions: A Beginner’s Guide] #footnote([Stranamente ChatGPT si dimostra molto utile nella stesura delle Actions, spesso riesce a dare la struttura generale del workflow e risparmiandovi un pò di tempo.])
 e di controllare il #link("https://github.com/marketplace")[Marketplace], dove probabilmente troverete tutti i pezzi necessari per comporre il vostro workflow.
-Un consiglio che ci sentiamo di darvi è di creare un repo separato in cui testare le actions prima di metterle in quello principale.
+Un consiglio che ci sentiamo di darvi è di creare un repo separato in cui testare le Actions prima di metterle in quello principale.
 
 == Actions secrets and variables
 
-Alcune actions avranno bisogno di accedere a dati sensibili come password, api key o token di GitHub per compiere azioni specifiche, per evitare che questi dati siano visibili pubblicamente si utilizzano i secrets,
-in pratica, vengono memorizzati in modo sicuro nei repository GitHub, e sono accessibili solo all'interno delle actions, esse infatti vengono anche nascoste dai log die esecuzione e una volta salvate non sono più leggibili nemmeno dalla ui.
+Alcune Actions avranno bisogno di accedere a dati sensibili come password, api key o token di GitHub per compiere azioni specifiche, per evitare che questi dati siano visibili pubblicamente si utilizzano i secrets,
+in pratica, vengono memorizzati in modo sicuro nei repository GitHub, e sono accessibili solo all'interno delle Actions, esse infatti vengono anche nascoste dai log die esecuzione e una volta salvate non sono più leggibili nemmeno dalla ui.
 Ad esempio, se la action deve usare una chiave API, è sufficente aggiungerla ai secrets del repository e poi richiamarla nella workflow in questo modo:
 
 ```yaml
@@ -98,7 +98,7 @@ per aggiungere un nuovo secret andate nella pagina del repository, poi *Settings
 
 == Runners
 
-Il concetto di *runner* è fondamentale per capire come funzionano le GitHub Actions. Un runner è un ambiente dove è in esecuzione il #link("https://github.com/actions/runner")[Runner] (software) il quale è collegato a GitHub ed è in ascolto per eseguire le actions. "L'ambiente" può essere una macchina fisica, virtuale o ancora meglio un container.
+Il concetto di *runner* è fondamentale per capire come funzionano le GitHub Actions. Un runner è un ambiente dove è in esecuzione il #link("https://github.com/actions/runner")[Runner] (software) il quale è collegato a GitHub ed è in ascolto per eseguire le Actions. "L'ambiente" può essere una macchina fisica, virtuale o ancora meglio un container.
 
 === Tipi di runner:
 
@@ -125,7 +125,7 @@ Il concetto di *runner* è fondamentale per capire come funzionano le GitHub Act
    Svantaggi:
    - *Manutenzione*: L'utente è responsabile della manutenzione, aggiornamento e sicurezza del runner.
    
-Per farla beve, noi vi sconsigliamo di appoggiarvi a GitHub per eseguire le vostre actions, durante il picco, circa una settimana prima della software fair vi ritroverete ad accettare decine di pull request, questo vuol dire che le action verranno eseguite molte volte e nonostante il caching sarà facile terminare le ore gratuite.
+Per farla beve, noi vi sconsigliamo di appoggiarvi a GitHub per eseguire le vostre Actions, durante il picco, circa una settimana prima della software fair vi ritroverete ad accettare decine di pull request, questo vuol dire che le action verranno eseguite molte volte e nonostante il caching sarà facile terminare le ore gratuite.
 
 === Hostare un runner (bare metal)
 
@@ -152,7 +152,7 @@ ENV ACTIONS_RUNNER_INPUT_REPLACE=true
 ENV RUNNER_ALLOW_RUNASROOT=true
 ENTRYPOINT ["bash", "-c", "./start.sh"]
 ```
-questo è il file che dovete modificare per poter aggiungere i software necessari all'esecuzione delle vostre actions.
+questo è il file che dovete modificare per poter aggiungere i software necessari all'esecuzione delle vostre Actions.
 
 Successivamente *create un'altro file* chiamato `start.sh` con il seguente contenuto:
 ```bash
