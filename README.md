@@ -1,6 +1,6 @@
 # git-for-dummies
 
-Una piccola guida su come organizzare e gestire il repository per il corso di Advanced Programming, su come usare git e le GitHub actions su.
+Una piccola guida su come organizzare e gestire il repository per il corso di Advanced Programming, su come usare git, Github e le GitHub Actions.
 
 # Typst per VS Code (Linux)
 
