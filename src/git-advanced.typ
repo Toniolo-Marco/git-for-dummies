@@ -12,10 +12,6 @@
 //TODO: Git reflog
 
 
-//TODO: Other merging strategies
-
-
-
 == Squash
 
 Spesso potremmo  aver fatto commit non necessari, o vorremmo avere un solo commit per la feature che stiamo sviluppando; in modo da avere una storia più pulita e comprensibile e delle PR che non contengono commit inutili. L'idea è di trasformare il flusso di lavoro visto in @workflow[Figura], in un flusso di lavoro simile:
@@ -502,3 +498,14 @@ In questo caso la soluzione più semplice e *rischiosa* è _riscrivere la storia
 \
 
 Questo inoltre ci permette di mantenere i commit intermedi in caso di necessita: elimineremo il branch una volta che non ci serviranno più.
+
+
+//TODO: Other merging strategies
+
+
+//TODO: Cherry-pick
+
+
+//TODO: Reduce the number of commits with git stash
+
+#link("https://www.atlassian.com/git/tutorials/saving-changes/git-stash")[Atlassian]
