@@ -198,7 +198,7 @@ echo "cleaning"
 rm -rf runner runner.tgz
 ```
 quello che fa questo script è scaricare l'ultima versione del runner per Linux amd64 dal repository ufficiale di GitHub, estrarlo e effettuare la build del Dockerfile presente nella stessa cartella generando l'immagine chiamata `github-runner:latest`, se avete letto il Dockerfile, noterete che vengono definite 5 variabili d'ambiente, quelle che interessano a voi sono: `RUNNER_MANAGER_TOKEN`, `GITHUB_ORG` e `RUNNER_NAME` per eseguire l'immagine appena creata, vi abbiamo preparato un `docker-compose.yml`:
-```compose
+```yaml
 services:
   github-runner:
     container_name: github-runner
