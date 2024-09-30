@@ -69,3 +69,5 @@
 #include "inviter.typ"
 
 #include "actions.typ"
+
+#bibliography("refs.yaml", style: "institute-of-electrical-and-electronics-engineers", title: "Bibliografia")

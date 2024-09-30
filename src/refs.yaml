@@ -1,0 +1,20 @@
+git-interactive-staging:
+    type: Chapter
+    title: Interactive Staging
+    author: 
+      - Scott Chacon
+      - Ben Straub
+    url: https://git-scm.com/book/en/v2/Git-Tools-Interactive-Staging
+    parent:
+        type: Book
+        title: Pro Git
+
+git-stash-tutorial:
+  type: Article
+  title: Git Stash
+  url: https://www.atlassian.com/git/tutorials/saving-changes/git-stash
+  parent:
+    type: Web
+    title: Git Tutorials
+    publisher: Atlassian
+    url: https://www.atlassian.com/git/tutorials

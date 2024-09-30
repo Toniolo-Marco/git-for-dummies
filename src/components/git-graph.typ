@@ -1,16 +1,20 @@
 #import "@preview/fletcher:0.5.1" as fletcher: diagram, node, edge, shapes, draw
 #import fletcher.shapes: diamond
-#import "double-label.typ" : double_label
+#import "multi-label.typ" : multi_label
 #import "utils.typ": alignment_to_coordinates, generate_label
 
-#let branch_indicator(name, start, color, remote, lbl_stroke: (1pt+white)) = {
+#let branch_indicator(name, start, color, remote: none, lbl_stroke: (1pt+white)) = {
     let near = (start.at(0)+0.25,start.at(1))
     if remote == none {
         // Single label node
         node(near, [#name], corner-radius: 2pt, fill: color, stroke: lbl_stroke)
-    } else {
+    } else if type(remote) == "string" {
         // Double label node
-        node(near,double_label((name,remote),lbl_stroke).node,inset:0pt, corner-radius:3pt, fill: color, stroke: lbl_stroke)
+        node(near,multi_label((name,remote),lbl_stroke).node,inset:0pt, corner-radius:3pt, fill: color, stroke: lbl_stroke)
+    } else if type(remote) == array {
+        // Multi label node
+        remote.insert(0,name)
+        node(near,multi_label(remote,lbl_stroke).node,inset:0pt, corner-radius:3pt, fill: color, stroke: lbl_stroke)
     }
 }
 
@@ -35,9 +39,9 @@
 
     // branch indicator
     if indicator-xy != none {
-        branch_indicator(name, indicator-xy, color, remote)
+        branch_indicator(name, indicator-xy, color,remote: remote)
     } else {
-        branch_indicator(name, start, color, remote)
+        branch_indicator(name, start, color, remote: remote)
     }
 
     let x = start.at(0) + 1 // x node coordinate
@@ -84,11 +88,11 @@
     }
 }
 
-#let connect_nodes(start, end, edge_stroke) = {
+#let connect_nodes(start, end, edge_stroke, bend: -20deg) = {
     if type(edge_stroke) == color {
-        edge(start, end, stroke: 2pt+edge_stroke, bend: -20deg)
+        edge(start, end, stroke: 2pt+edge_stroke, bend: bend)
     }
     else if type(edge_stroke) == stroke {
-        edge(start, end, edge_stroke,bend: -20deg)
+        edge(start, end, edge_stroke,bend: bend)
     }
 }

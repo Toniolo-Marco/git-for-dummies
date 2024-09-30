@@ -30,7 +30,7 @@ Questo passaggio richiede l'aver già creato l'organizzazione alla quale apparte
 
 1. Aprite la pagina: _"https://github.com/orgs/nome-organizzazione/repositories"_
 
-2. Premete sul pulsante: #box(fill: rgb("#29903B"),inset: 7pt, baseline: 25%, radius: 4pt)[#text(stroke: white, font: "Segoe UI Variable Static Display", size: 7pt, weight: "thin",tracking: 0.5pt)[New Repository]]
+2. Premete sul pulsante: #box(fill: rgb("#29903B"),inset: 7pt, baseline: 25%, radius: 4pt)[#text(stroke: white, font: "Noto Sans", size: 7pt, weight: "light",tracking: 0.5pt)[New Repository]]
 
 3. Da qui in poi compilate i campi, scegliendo il nome, la visibilità e la descrizione della repo. Il file README.md si può aggiungere anche in seguito.
 
@@ -380,12 +380,248 @@ Una rappresentazione visiva di questo stato è la seguente:
     ]
 ]
 
-== Unire due branch
+== Merge
 
-In questa sezione copriremo solo il metodo di merge, in quanto è il più sicuro e veloce.
+Per combinare le funzionalità implementate in 2 branch diversi, esistono diverse tecniche; in questa sezione copriremo solo il metodo di merge, in quanto è il più _sicuro_ e _semplice_.
 
+Nel capitolo riguardante la teoria, abbiamo visto il workflow (@workflow[Figure]) che vogliamo ottenere. Ci sono diverse situazioni in cui ci possiamo trovare: se il branch che vogliamo unire non ha subito modifiche durante lo sviluppo della nostra feature, il merge sarà detto _fast-forward_.
+#footnote([Si presuppone che l'etichetta del branch `main` sia sempre sull'ultimo commit _blu_. Ogni plug-in o rappresentazione grafica rappresenta i branch in maniera leggermente differente])
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // main branch
+                name:"main",
+                color:blue,
+                start:(0,1),
+                length:3,
+            ),
+
+            connect_nodes((3,1),(4,2),orange),
+            branch( // feature branch
+                name:"feature",
+                color:orange,
+                start:(3,2),
+                length:3,
+                head: 2,
+            ),
+        )
+    ]
+]
+
+In situazioni simili siamo sicuri che non si presenteranno conflitti di merge, e questo potrà avvenire con i comandi: `git switch main`, seguito da `git merge feature`. Così facendo otterremo un albero simile a questo:
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // main branch
+                name:"main",
+                color:blue,
+                start:(0,1),
+                length:6,
+                head: 5
+            ),
+            branch_indicator("feature", (0,1.5), blue)
+        )
+    ]
+]
+
+Cosa accadrebbe se invece ci fossero stati dei commit sul main durante lo sviluppo della feature a cui siamo interessati?
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // main branch
+                name:"main",
+                color:blue,
+                start:(0,1),
+                length:3,
+            ),
+            connect_nodes((3,1),(4,1), blue, bend:20deg),
+            branch( // feature 1 branch
+                name:"feature 1",
+                indicator-xy: (3.5,1.5),
+                color:blue,
+                start:(3,1),
+                length:3,
+            ),
+            
+            connect_nodes((3,1),(4,2),teal),
+            branch( // feature 2 branch
+                name:"feature 2",
+                color: teal,
+                start: (3,2),
+                length: 3,
+                head: 2
+            )
+        )
+    ]
+]
+
+Il grafico si presenterebbe in questo modo: il branch _main_ ha subito delle modifiche e per evidenziare che la _feature 1_ è stata integrata nel _main_ abbiamo utilizzato lo stesso colore blu ma con il collegamento dei nodi diverso per evidenziare l'inizio dei commit appartenenti alla _feature 1_.
+
+Per capire meglio la situazione, possiamo anche ridisegnare il grafico nel seguente modo, dove le etichette dei branch sono allineate con il commit su cui si trovano:
+#footnote([Questa rappresentazione è simile a quella del plug-in per VS-Code Git Graph che raccomandiamo])
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // main branch
+                name:"main",
+                indicator-xy: (5.75,0),
+                color:blue,
+                start:(0,1),
+                length:3,
+            ),
+            connect_nodes((3,1),(4,1), blue, bend:0deg),
+            branch( // feature 1 branch
+                name:"feature 1",
+                indicator-xy: (5.75,0.5),
+                color:blue,
+                start:(3,1),
+                length:3,
+            ),
+            
+            connect_nodes((3,1),(4,2),teal),
+            branch( // feature 2 branch
+                name:"feature 2",
+                indicator-xy: (5.75,2.5),
+                color: teal,
+                start: (3,2),
+                length: 3,
+                head: 2
+            )
+        )
+    ]
+]
+
+In questo caso non possiamo sapere a priori se ci saranno o meno conflitti di merge.
+
+Per unire i due branch, come prima, possiamo usare i comandi: `git switch main`, seguito da `git merge feature-2`. In questo caso, se ci sono conflitti di merge, ci verranno notificati sul terminale e dovremo risolverli manualmente.
+
+Come esempio, ho utilizzato una stringa diversa sulla stessa linea del file README.md in due branch diversi. Il risultato quando si tenta di fare il merge del secondo branch è il seguente:
+
+```bash
+git merge feature-2
+Auto-merging README.md
+CONFLICT (content): Merge conflict in README.md
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+A seconda dell'editor che utilizziamo i file contenenti i conflitti saranno o meno evidenziati. Comunque ogni file con conflitto all'apertura mostrerà qualcosa di simile:
+
+#align(center)[
+    #image("/src/img/file-with-merge-conflicts.png")
+]
+
+A questo punto non ci rimane che rimuovere il cambiamento che non vogliamo mantenere o in alternativa combinare entrambi. Proseguiamo salvando il file, chiudendolo e assicurandoci che sia nella staging area con il comando: `git add ...`. Ora possiamo lanciare il comando `git commit` (che assegnerà il messaggio di default: _"Merge branch feature-2"_). Ora il nostro albero sarà:
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // main branch
+                name:"main",
+                indicator-xy: (6.75,0.5),
+                color:blue,
+                start:(0,1),
+                length:7,
+                head: 6,
+                commits:("", "", "", "", "", "", "Merge branch feature-2"),
+                alignment: bottom
+            ),
+            branch_indicator("feature 1", (5.75,0.5), blue),
+            
+            connect_nodes((3,1),(4,2),teal),
+            branch( // feature 2 branch
+                name:"feature 2",
+                indicator-xy: (5.75,2.5),
+                color: teal,
+                start: (3,2),
+                length: 3,
+            ),
+
+            //merge edge
+            connect_nodes((6,2),(7,1),teal),
+        )
+    ]
+]
+
+È importante notare diverse cose:
+
+- Il branch _feature-2_ non è stato eliminato ed è ancora al suo ultimo commit.
+- Anche il branch _feature-1_ è ancora al suo ultimo commit.
+- Per entrambi i branch _feature_ si tratta di un "merge _fast-forward_": infatti se ci spostiamo su uno dei due e diamo il comando `git merge main` non avremo conflitti di alcun tipo. Se lo facciamo per entrambi otterremo:
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // main branch
+                name:"main",
+                indicator-xy: (6.75,0.5),
+                color:blue,
+                start:(0,1),
+                length:7,
+                head: 6,
+                commits:("", "", "", "", "", "", "Merge branch feature-2"),
+                alignment: bottom
+            ),
+            branch_indicator("feature 1", (6.75,0), blue),
+            branch_indicator("feature 2", (6.75,-0.5), blue),        
+
+            //other branch stuff
+            connect_nodes((3,1),(4,2),teal),
+            branch( // old branch
+                name:"",
+                color: teal,
+                start: (3,2),
+                length: 3,
+            ),
+            connect_nodes((6,2),(7,1),teal),
+        )
+    ]
+]
 
 == Gestione dei Remote Repository
+
+Finora abbiamo lavorato solo sul repository locale, affrontando gli scenari senza considerare il remote repository. In questo capitolo sopperiremo a questa mancanza.
+
+=== Analisi
 
 Per avere informazioni sui remote possiamo servirci di diversi comandi:
 
@@ -405,12 +641,140 @@ Per avere informazioni sui remote possiamo servirci di diversi comandi:
 
 Come si può intuire il comando suggerito da GitHub: `git remote add origin URL`, (visto nella @init-repo[Sezione]) aggiungerà l'URL come repository remote, con il nome *origin*. 
 
+=== Operazioni di Push e Pull
+
+Le operazioni di push e pull sono fondamentali per mantenere sincronizzati i repository locali e remoti. Come si evince dal nome stesso del comando, `git push` invia le modifiche locali al repository remoto, mentre `git pull` scarica le modifiche dal repository remoto.
+
+Per identificare l'appartenenza di un branch ad un repository remoto nella label del branch useremo la notazione _remote/branch_:
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // main branch
+                name:"main",
+                indicator-xy: (6.75,0.5),
+                color:blue,
+                start:(0,1),
+                length:7,
+                head: 6,
+            ),
+
+            // origin/main indicator
+            branch_indicator("origin/main", (3.75,0.5), blue),
+
+        )
+    ]
+]
+
+Nel caso appena presentato, il branch _main_ nella repository locale è "più avanti" rispetto a quello della repository remota. Per sincronizzare i due branch, dunque, dovremo fare un _push_.
+
+Una volta lanciato il comando `git push origin main`, se tutto va a buon fine, il risultato sarà:
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // main branch
+                name:"main",
+                remote: "orgin",
+                indicator-xy: (6.75,0.5),
+                color:blue,
+                start:(0,1),
+                length:7,
+                head: 6,
+            ),
+        )
+    ]
+]
+
+Come potete osservare usiamo questa label speciale per indicare che il branch in locale è allineato con quello remoto.
+
+In un caso simile, invece, è utile spostarsi sul branch main ed effettuare un _pull_: stiamo sviluppando la nostra feature e qualcuno ha pushato sul branch main in remoto.
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch_indicator("main", (3.75,0.5), blue),
+
+            branch( // main branch
+                name:"main/origin",
+                indicator-xy: (6.8,0.5),
+                color:blue,
+                start:(0,1),
+                length:7,
+                head: 6,
+            ),
+
+            //other branch stuff
+            connect_nodes((3,1),(4,2),teal),
+            branch( // old branch
+                name:"feature",
+                indicator-xy: (6,2.5),
+                color: teal,
+                start: (3,2),
+                length: 3,
+            ),
+        )
+    ]
+]
+
+Vediamo ora un caso in cui il main sul nostro fork è fermo ad un commit precedente, rispetto al main di un altro remote.
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch_indicator("main", (3.75,0.5), blue),
+
+            branch( // main branch
+                name:"main/origin",
+                indicator-xy: (6.8,0.5),
+                color:blue,
+                start:(0,1),
+                length:7,
+                head: 6,
+            ),
+
+            //other branch stuff
+            connect_nodes((3,1),(4,2),teal),
+            branch( // old branch
+                name:"feature",
+                indicator-xy: (6,2.5),
+                color: teal,
+                start: (3,2),
+                length: 3,
+            ),
+        )
+    ]
+]
 
 
 
 
 
-
+//TODO: integrate the stuff below here
 
 Il messaggio di commit dovrebbe essere chiaro e descrivere cosa hai fatto.
 
@@ -451,128 +815,3 @@ hint: 	git branch -m <name>
 
 
 I branch sono utilizzati per lavorare su funzionalità diverse o bugfix separati dal ramo principale (`main` o `master`).
-
-```bash
-git branch <nome-branch>
-```
-
-
-
-9. Spostarsi su un branch
-Per passare a un branch diverso, usa il comando:
-
-```bash
-git checkout <nome-branch>
-```
-
-10. Creare e passare a un nuovo branch
-Se vuoi creare un nuovo branch e passare immediatamente a esso:
-
-```bash
-git checkout -b <nome-branch>
-```
-
-11. Unire un branch
-Dopo aver completato il lavoro su un branch, puoi unire le modifiche nel branch principale (ad es. `main` o `master`):
-
-1. Prima, assicurati di essere sul branch principale:
-   
-    ```bash
-    git checkout main
-    ```
-
-2. Poi, unisci le modifiche dal branch secondario:
-
-    ```bash
-    git merge <nome-branch>
-    ```
-
-12. Rimuovere un branch
-Dopo aver unito un branch, puoi rimuoverlo:
-
-```bash
-git branch -d <nome-branch>
-```
-
-13. Aggiornare il repository locale (pull)
-Per scaricare le modifiche da un repository remoto (ad esempio, su GitHub):
-
-```bash
-git pull
-```
-
-Questo comando recupera e unisce le modifiche dal repository remoto a quello locale.
-
-14. Inviare modifiche al repository remoto (push)
-Per inviare le tue modifiche al repository remoto:
-
-```bash
-git push origin <nome-branch>
-```
-
-Assicurati di aver prima configurato un repository remoto con:
-
-```bash
-git remote add origin <url-repository>
-```
-
-15. Gestire i conflitti di merge
-Se ci sono conflitti durante l'unione di due branch, Git ti avviserà. Dovrai risolvere manualmente i conflitti nei file interessati, quindi eseguire:
-
-```bash
-git add <file-risolto>
-git commit
-```
-
-16. Annullare modifiche
-1. Annullare modifiche non aggiunte all'area di staging:
-
-    ```bash
-    git checkout -- <nomefile>
-    ```
-
-2. Rimuovere un file dall'area di staging senza perdere le modifiche:
-
-    ```bash
-    git reset <nomefile>
-    ```
-
-3. Annullare un commit precedente (lasciando le modifiche nel working directory):
-
-    ```bash
-    git reset --soft HEAD^
-    ```
-
-4. Ripristinare un commit (attenzione, può essere distruttivo):
-
-    ```bash
-    git reset --hard <hash-commit>
-    ```
-
-17. Controllare differenze (diff)
-Per vedere le differenze tra le modifiche non ancora messe in staging:
-
-```bash
-git diff
-```
-
-Se vuoi vedere le differenze tra il tuo branch attuale e un altro branch:
-
-```bash
-git diff <altro-branch>
-```
-
-18. Taggare un commit
-Per creare un tag su un commit specifico, ad esempio per versionare una release:
-
-```bash
-git tag -a v1.0 -m "Versione 1.0"
-git push origin --tags
-```
-
-19. Cancellare un commit dalla cronologia (reflog)
-Se hai bisogno di recuperare un commit cancellato o navigare nella cronologia delle operazioni, puoi usare:
-
-```bash
-git reflog
-```

@@ -1,24 +1,23 @@
 {
 	"version": "2.0.0",
 	"tasks": [
-		{
-			"label": "typst compile main on chapter changed",
-			"type": "shell",
-			"command": "watchexec",
-			"args": [
-				"--exts",
-				"typ",
-				"--",
-				"\"typst compile main.typ --root=../ --font-path=${workspaceFolder}/src/fonts/noto-sans\""
-			],
-			"options": {
-				"cwd": "${workspaceFolder}/src/"
-			},
-			"runOptions": {
-				"runOn": "folderOpen"
-			}
-		}
-
+		// {
+		// 	"label": "typst compile main on chapter changed",
+		// 	"type": "shell",
+		// 	"command": "watchexec",
+		// 	"args": [
+		// 		"--exts",
+		// 		"typ",
+		// 		"--",
+		// 		"\"typst compile main.typ --root=../ --font-path=${workspaceFolder}/src/fonts/noto-sans\""
+		// 	],
+		// 	"options": {
+		// 		"cwd": "${workspaceFolder}/src/"
+		// 	},
+		// 	"runOptions": {
+		// 		"runOn": "folderOpen"
+		// 	}
+		// }
 		// {
 		// 	"label": "typst compile main",
 		// 	"type": "shell",
