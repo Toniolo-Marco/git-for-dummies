@@ -13,19 +13,25 @@
 #set document(
   title: [Git for Dummies],
   author: ("Toniolo Marco, Frigerio Federico"),
-  keywords: ("advanced", "git", "guide", "advanced programming"),
+  keywords: ("git", "guide", "GitHub"),
   date: (auto)
 )
 
-// theme for code blocks
-// #set raw(theme: "themes/halcyon.tmTheme")
+//theme for code blocks
+//#set raw(theme: "themes/halcyon.tmTheme")
 
-// #show raw: it => block(
-//   fill: rgb("#1d2433"),
-//   inset: 8pt,
-//   radius: 5pt,
-//   text(fill: rgb("#a2aabc"), it)
-// )
+// create code blocks with background
+#let code-block = block.with(
+  fill: rgb("#1d2433"),
+  inset: 8pt,
+  radius: 5pt,
+  breakable: false,
+)
+
+#show raw.where(block: true): it => code-block(
+  text(fill: rgb("#a2aabc"), it)
+)
+
 
 #set quote(block: true)
 #show quote: set align(center)
