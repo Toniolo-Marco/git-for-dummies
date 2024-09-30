@@ -668,15 +668,6 @@ Per identificare l'appartenenza di un branch ad un repository remoto nella label
             // origin/main indicator
             branch_indicator("origin/main", (3.75,0.5), blue),
 
-            //other branch stuff
-            connect_nodes((3,1),(4,2),teal),
-            branch( // old branch
-                name:"",
-                color: teal,
-                start: (3,2),
-                length: 3,
-            ),
-            connect_nodes((6,2),(7,1),teal),
         )
     ]
 ]
@@ -703,25 +694,13 @@ Una volta lanciato il comando `git push origin main`, se tutto va a buon fine, i
                 length:7,
                 head: 6,
             ),
-
-            //other branch stuff
-            connect_nodes((3,1),(4,2),teal),
-            branch( // old branch
-                name:"",
-                color: teal,
-                start: (3,2),
-                length: 3,
-            ),
-            connect_nodes((6,2),(7,1),teal),
         )
     ]
 ]
 
 Come potete osservare usiamo questa label speciale per indicare che il branch in locale è allineato con quello remoto.
 
-Presentiamo ora un esempio più complesso, dov'è utile un _pull_:
-
-//TODO: complete this section
+In un caso simile, invece, è utile spostarsi sul branch main ed effettuare un _pull_: stiamo sviluppando la nostra feature e qualcuno ha pushato sul branch main in remoto.
 
 #align(center)[
     #scale(90%)[
@@ -732,10 +711,11 @@ Presentiamo ora un esempio più complesso, dov'è utile un _pull_:
             spacing: 4em,
             mark-scale: 50%,
 
+            branch_indicator("main", (3.75,0.5), blue),
+
             branch( // main branch
-                name:"main",
-                remote: ("orgin","my-fork"),
-                indicator-xy: (6.75,0.5),
+                name:"main/origin",
+                indicator-xy: (6.8,0.5),
                 color:blue,
                 start:(0,1),
                 length:7,
@@ -745,17 +725,50 @@ Presentiamo ora un esempio più complesso, dov'è utile un _pull_:
             //other branch stuff
             connect_nodes((3,1),(4,2),teal),
             branch( // old branch
-                name:"",
+                name:"feature",
+                indicator-xy: (6,2.5),
                 color: teal,
                 start: (3,2),
                 length: 3,
             ),
-            connect_nodes((6,2),(7,1),teal),
         )
     ]
 ]
 
+Vediamo ora un caso in cui il main sul nostro fork è fermo ad un commit precedente, rispetto al main di un altro remote.
 
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch_indicator("main", (3.75,0.5), blue),
+
+            branch( // main branch
+                name:"main/origin",
+                indicator-xy: (6.8,0.5),
+                color:blue,
+                start:(0,1),
+                length:7,
+                head: 6,
+            ),
+
+            //other branch stuff
+            connect_nodes((3,1),(4,2),teal),
+            branch( // old branch
+                name:"feature",
+                indicator-xy: (6,2.5),
+                color: teal,
+                start: (3,2),
+                length: 3,
+            ),
+        )
+    ]
+]
 
 
 

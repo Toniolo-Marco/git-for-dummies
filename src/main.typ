@@ -17,15 +17,16 @@
   date: (auto)
 )
 
-// theme for code blocks
-// #set raw(theme: "themes/halcyon.tmTheme")
 
-// #show raw: it => block(
-//   fill: rgb("#1d2433"),
-//   inset: 8pt,
-//   radius: 5pt,
-//   text(fill: rgb("#a2aabc"), it)
-// )
+// #show raw: it => {
+  
+//     // block(
+//     //   fill: rgb("#1d2433"),
+//     //   inset: 8pt,
+//     //   radius: 5pt,
+//     //   text(fill: rgb("#a2aabc"), it)
+//     // )
+// }
 
 #set quote(block: true)
 #show quote: set align(center)
@@ -63,3 +64,5 @@
 #include "inviter.typ"
 
 #include "actions.typ"
+
+#bibliography("refs.yaml", style: "institute-of-electrical-and-electronics-engineers", title: "Bibliografia")

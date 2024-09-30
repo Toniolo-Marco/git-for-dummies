@@ -11,6 +11,46 @@
 
 //TODO: Git reflog
 
+== Interactive Staging
+
+Git ci permette di fare uno staging interattivo @git-interactive-staging con il comando `git add -i` o `git add --interactive`. L'output che avremo sarà molto dettagliato riguardo i singoli files e il loro stato. Inoltre, sotto, avremo un menù con molteplici comandi:
+
+```bash
+git add -i
+           staged     unstaged path
+  1:    unchanged        +0/-1 TODO
+  2:    unchanged        +1/-1 index.html
+  3:    unchanged        +5/-1 lib/simplegit.rb
+
+*** Commands ***
+  1: [s]tatus     2: [u]pdate      3: [r]evert     4: [a]dd untracked
+  5: [p]atch      6: [d]iff        7: [q]uit       8: [h]elp
+What now>
+```
+
+Da questo momento in poi avremo una shell interattiva, analizziamo quindi le opzioni:
+
+- `status`: restituisce lo stato dei file, mostrando quante righe sono state aggiunte o rimosse.
+- `update`: permette di portare i file nella staging area.
+- `revert`: rimuove i file dalla staging area.
+- `add untracked`: aggiunge i file non tracciati.
+- `patch`: permette di fare uno staging parziale, lavorando su singole parti di un file.
+- `diff`: mostra le differenze tra l'index e l'HEAD.
+
+Ognuno di questi comandi può essere eseguito digitando il numero corrispondente del file. Per selezionare più file utilizzando una virgola o uno spazio come separatore. I file selezionati saranno preceduti da un asterisco nell'output successivo. Per confermare le modifiche ci basterà premere invio, tornando così al menù principale.
+
+In alternativa possiamo utilizzare un asterisco ("\*") per selezionare tutti i file, ed in automatico verranno applicate le modifiche a tutti i file.
+
+- `quit`: esce dalla shell interattiva.
+- `help`: mostra i comandi disponibili e la descrizione.
+
+== Avoid useless commits with Git Stash
+
+Se avete mai scritto del codice con o senza git, vi sarete resi conto che spesso vorremmo sperimentare nuove idee o fare delle modifiche senza dover creare un commit per ogni singola modifica. Oppure in molti casi non abbiamo ancora abbastanza materiale per creare un commit, ma vogliamo comunque salvare il lavoro fatto finora. Per quello che abbiamo imparato, dovremmo fare un commit e poi utilizzare l'opzione `--amend` per editarlo con le nuove modifiche. In questi casi possiamo usare `git stash`. @git-stash-tutorial
+
+L'operazione di stash seleziona *tutte le modifiche dei file tracciati ed i file nella staging area* e le salva su uno stack temporaneo. Questo ci farà tornare ad una working directory pulita, sincronizzata con l'HEAD e ci permette di ri-applicare le modifiche in un secondo momento. 
+
+Come comando possiamo utilizzare `git stash push` (equivalente di `git stash` senza argomenti). Il 
 
 == Squash
 
@@ -504,8 +544,3 @@ Questo inoltre ci permette di mantenere i commit intermedi in caso di necessita:
 
 
 //TODO: Cherry-pick
-
-
-//TODO: Reduce the number of commits with git stash
-
-#link("https://www.atlassian.com/git/tutorials/saving-changes/git-stash")[Atlassian]

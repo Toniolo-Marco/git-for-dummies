@@ -1,0 +1,8 @@
+{
+    "tinymist.preview.refresh": "onSave",
+    "tinymist.preview.partialRendering": true,
+    "tinymist.previewFeature": "disable",
+    "tinymist.preview.scrollSync": "never",
+    "typst-lsp.exportPdf": "never",
+    "typst-lsp.experimentalFormatterMode": "off"
+}
