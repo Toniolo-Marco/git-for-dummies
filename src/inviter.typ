@@ -34,17 +34,9 @@ services:
     ports:
       - "80:80"
 ```
-non vi resta che aprire un terminale nella stessa cartella e dare i seguenti comandi:
+non vi resta che aprire un terminale nella stessa cartella e dare i seguenti comandi: 
 
-```bash
-docker compose up -d
-```
-e poi per verificare che tutto funzioni
-```bash
-docker compose logs
-```
-il risultato dovrebbe essere:
-```
-Server is running on http://127.0.0.1:80
-```
+- `docker compose up -d`
+- e poi per verificare che tutto funzioni `docker compose logs`
+- il risultato dovrebbe essere: `Server is running on http://127.0.0.1:80`
 L'ideale ora sarebbe esporre l'inviter dietro ad un reverse proxy il quale dovrebbe occuparsi di https, se invece volete esporlo direttamente vi consigliamo caldamene configurare tls tramite gli appositi parametri, seguite il README.md sulla pagina GitHub per tutte le informazioni.])

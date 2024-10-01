@@ -1,3 +1,8 @@
+git-docs:
+    type: Web
+    title: Git Documentation
+    url: https://git-scm.com/docs
+
 git-interactive-staging:
     type: Chapter
     title: Interactive Staging
@@ -18,3 +23,13 @@ git-stash-tutorial:
     title: Git Tutorials
     publisher: Atlassian
     url: https://www.atlassian.com/git/tutorials
+
+gh-sync:
+  type: Article
+  title: Syncing a fork branch with the GitHub CLI
+  url: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork#syncing-a-fork-branch-with-the-github-cli
+  parent:
+    type: Web
+    title: Syncing a fork
+    publisher: GitHub
+    url: https://cli.github.com/manual/gh_repo_sync

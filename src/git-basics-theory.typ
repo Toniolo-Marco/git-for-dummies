@@ -183,7 +183,7 @@ Di seguito un'esempio di _pull request_ su GitHub:
 La pr rappresentata è composta da:
 - il titolo della pr
 - la descrizione delle modifiche apportate
-- numero identificativo (*per eliminare una pr è necessario contattare github*)
+- numero identificativo (*incrementa insieme a quello delle issue*)
 - commit associati (anche di diversi autori)
 - stato della pr (aperta, chiusa, merge, ecc.)
 - label (tag che permettono di categorizzare le pr)

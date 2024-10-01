@@ -1,3 +1,10 @@
+// Double Page break
+#let n_pagebreak(n: 1) = {
+  for i in range(0,n) {
+    pagebreak()
+  }
+}
+
 // translate from alignment to relative coordinates
 #let alignment_to_coordinates(alignment) = {
     if alignment == bottom {

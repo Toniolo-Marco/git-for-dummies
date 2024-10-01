@@ -1,6 +1,8 @@
 #import "@preview/diagraph:0.3.0": *
 #import "@preview/minitoc:0.1.0": *
 #import "@preview/fletcher:0.5.1" as fletcher: diagram, node, edge, shapes
+#import "./components/code-blocks.typ": code-block, window-titlebar
+#import "./components/utils.typ": n_pagebreak
 
 #set heading(numbering: "1.")
 #set page(numbering: "1")
@@ -17,21 +19,30 @@
   date: (auto)
 )
 
-//theme for code blocks
-//#set raw(theme: "themes/halcyon.tmTheme")
-
-// create code blocks with background
-#let code-block = block.with(
-  fill: rgb("#1d2433"),
-  inset: 8pt,
-  radius: 5pt,
-  breakable: false,
-)
-
+// Code-blocks Rule
 #show raw.where(block: true): it => code-block(
-  text(fill: rgb("#a2aabc"), it)
+  stack(
+    dir:ttb,
+    window-titlebar,
+    block.with(
+      fill: rgb("#1d2433"),
+      inset: 8pt,
+      radius: 5pt,
+    )(
+      text(fill: rgb("#a2aabc"), it)
+    )
+  )
 )
 
+// Inline Code Rule
+#show raw.where(block: false): it => box(
+    fill: rgb("#1d2433"),
+    inset: 5pt,
+    baseline: 25%,
+    radius:2pt,
+    text(fill: rgb("#a2aabc"), it
+  )
+)
 
 #set quote(block: true)
 #show quote: set align(center)
@@ -41,8 +52,7 @@
 #include "cover.typ"
 
 // Table of contents
-#pagebreak() // Avoid starting behind the cover
-#pagebreak()
+#n_pagebreak(n: 2) // Avoid starting behind the cover
 
 #show outline.entry.where(
   level: 1
@@ -60,7 +70,7 @@
 
 #include "git-advanced.typ"
 
-#pagebreak()
+#n_pagebreak(n: 1)
 
 #include "roles-duties.typ"
 
@@ -69,5 +79,7 @@
 #include "inviter.typ"
 
 #include "actions.typ"
+
+#n_pagebreak(n:2)
 
 #bibliography("refs.yaml", style: "institute-of-electrical-and-electronics-engineers", title: "Bibliografia")
