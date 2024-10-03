@@ -128,11 +128,11 @@ Il flusso di lavoro più comune è il seguente:
             )
         ]
     ],
-    caption: [Simple Workflow Diagram]
+    caption: [Workflow Diagram]
 )<workflow>
 
 
-Al branch develop vengono mergiate tutte le funzionalità sviluppate, successivamente quando si è sicuri che il codice sia stabile e pronto per la produzione, si può fare il merge di develop in main.
+A _develop_ vengono mergiate tutte le funzionalità sviluppate, successivamente quando si è sicuri che il codice sia stabile e pronto per la produzione, si può fare il merge di develop in _main_.
 
 == Remote Repository <remote>
 
@@ -183,7 +183,7 @@ Di seguito un'esempio di _pull request_ su GitHub:
 La pr rappresentata è composta da:
 - il titolo della pr
 - la descrizione delle modifiche apportate
-- numero identificativo (*per eliminare una pr è necessario contattare github*)
+- numero identificativo (*incrementa insieme a quello delle issue*)
 - commit associati (anche di diversi autori)
 - stato della pr (aperta, chiusa, merge, ecc.)
 - label (tag che permettono di categorizzare le pr)
