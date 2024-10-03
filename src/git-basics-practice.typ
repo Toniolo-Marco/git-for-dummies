@@ -9,18 +9,36 @@
 Prima di iniziare a utilizzare Git, è importante configurare il proprio nome utente e l'indirizzo email, poiché questi saranno associati ai tuoi commit.
 
 ```bash
-git config --global user.name "name"
-git config --global user.email "your@email"
+➜  git config --global user.name "name"
+➜  git config --global user.email "your@email"
+```
+
+== Configurare gh
+
+`gh` è il tool che utilizzeremo per interagire da CLI con GitHub, per configurare il nostro account utilizziamo:
+
+```bash
+➜  gh auth login
+    ? What account do you want to log into? GitHub.com
+    ? What is your preferred protocol for Git operations on this host? SSH
+    ? Generate a new SSH key to add to your GitHub account? Yes
+    ? Enter a passphrase for your new SSH key (Optional): 
+    ? Title for your SSH key: GitHub CLI
+    ? How would you like to authenticate GitHub CLI? Login with a web browser
+    
+    ! First copy your one-time code: A111-B222
+    Press Enter to open github.com in your browser... 
+    ✓ Authentication complete.
+    - gh config set -h github.com git_protocol ssh
+    ✓ Configured git protocol
+    ✓ Uploaded the SSH key to your GitHub account: /home/path/to/.ssh/key.pub
+    ✓ Logged in as GitHub-Username
 ```
 
 == Inizializzare un nuovo repository <init-repo>
 
 Per creare un nuovo progetto con Git, spostati nella directory del tuo progetto e inizializza un repository con il comando 
-#footnote("Ignoriamo per ora l'output che verrà analizzato in seguito"):
-
-```bash
-git init
-```
+#footnote("Ignoriamo per ora l'output che verrà analizzato in seguito"): `git init`
 
 Abbiamo crato così il repository locale, sul nostro computer. Come abbiamo visto nel capitolo precedente: @remote[Remote Repository], Git si basa sui concetti di *local* e *remote*. Dunque le modifiche effettuate in locale *non influiscono automaticamente* sul remote. 
 
@@ -28,7 +46,7 @@ Solitamente, per i progetti più piccoli, come quelli individuali o quello affro
 
 Questo passaggio richiede l'aver già creato l'organizzazione alla quale apparterrà il repository. In alternativa è possibile crearla come personale e poi passare l'ownership.
 
-1. Aprite la pagina: _"https://github.com/orgs/nome-organizzazione/repositories"_
+1. Aprite la pagina: _“https://github.com/orgs/organization/repositories”_
 
 2. Premete sul pulsante: #box(fill: rgb("#29903B"),inset: 7pt, baseline: 25%, radius: 4pt)[#text(stroke: white, font: "Noto Sans", size: 7pt, weight: "light",tracking: 0.5pt)[New Repository]]
 
@@ -42,13 +60,20 @@ Questo passaggio richiede l'aver già creato l'organizzazione alla quale apparte
     git add README.md
     git commit -m "first commit"
     git branch -M main
-    git remote add origin https://github.com/Advanced-Programming-2023/test.git
+    git remote add origin https://github.com/orgs/organization/repository.git
     git push -u origin main
     ```
     
 
-    Il primo comando crea un file chiamato README.md, se non esiste già e aggiunge la stringa "\# title" al suo contenuto. (Il simbolo "\#" in Markdown indica un titolo). Gli altri comandi verranno spiegati nei prossimi capitoli.
+    Il primo comando crea un file chiamato README.md, se non esiste già e aggiunge la stringa "\# title" al suo contenuto. (Il simbolo "\#" in Markdown indica un titolo). Gli altri comandi verranno sviscerati nei prossimi capitoli, comunque, per una descrizione concisa:
 
+    - `git init` lo abbiamo appena visto, inizializza un progetto di git in locale
+    - `git add README.md` aggiunge il file `README.md` alla staging area
+    - `git commit -m "first commit"` effettua il commit
+    - `git branch -M main` imposta _main_ come branch principale
+    - `git remote add origin ...` imposta la repository appena creata su GitHub come remote della nostra repository locale
+    - `git push -u origin main` "pubblica" sul remote repository il commit che abbiamo appena effettuato.#footnote([Nota: `-u` è l'equivalente di `--set-upstream`, sostanzialmente imposta a quale remote il branch in locale dovrebbe pushare])
+    
 == Clonare un repository
 
 Nel caso il progetto esista già è sufficiente: spostarci nella cartella e clonare il repository: `git clone <url-repository>`. In questo modo avremmo una copia del repository remoto sulla nostra macchina.
@@ -63,7 +88,7 @@ Per portare i file modificati dalla directory di lavoro all'area di staging, usi
     columns: (3fr,2fr), 
     
     [
-        Durante lo sviluppo di git, sono sviluppate diverse funzionalità molto utili e nel tempo sono state aggiunte quasi tutte al comando `git checkout`. Attualmente il team di Git, sta lavorando per separare queste funzionalità in comandi distinti.
+        Durante lo sviluppo di git, sono state sviluppate diverse funzionalità molto utili e nel tempo sono state aggiunte quasi tutte al comando `git checkout`. Attualmente il team di Git, sta lavorando per separare queste funzionalità in comandi distinti.
 
         Allo stesso anche in altri casi troveremo comandi diversi che hanno lo stesso scopo. In questo documento vedremo entrambe le versioni per completezza; tuttavia è consigliabile utilizzare i comandi più recenti.
 
@@ -141,13 +166,15 @@ Se abbiamo apportato modifiche a più file, risulterebbe molto utile avere un co
 Una volta che aggiunti i file all'area di staging, possiamo creare un commit con il comando:
 
 ```bash
-git commit -m "Messaggio descrittivo delle modifiche"
+➜ git commit -m "Message describing changes made"
 ```
 
-Se si vogliono aggiungere tutti i file modificati alla staging area e creare un commit in un solo comando, si può usare:
+Il messaggio di commit dovrebbe essere chiaro e descrivere cosa hai fatto.
+
+Se si vogliono aggiungere tutti i *file modificati* alla staging area e creare un commit in un solo comando, si può usare:
 
 ```bash
-git commit -am "Messaggio descrittivo delle modifiche"
+➜ git commit -am "Message describing changes made"
 ```
 
 Se si vogliono aggiungere tutti i file, anche quelli untracked, non è possibile farlo in un solo comando. Si dovrà prima aggiungere i file all'area di staging con `git add -A` e poi creare il commit, seguendo l'iter classico.
@@ -157,9 +184,9 @@ Se si vogliono aggiungere tutti i file, anche quelli untracked, non è possibile
 Spesso si utilizzano alias per abbreviare i comandi più lunghi, o combinare più comandi in uno solo. Per esempio, per creare un alias per aggiungere tutti i file in stage e quindi commitare anche i file untracked:
 
 ```bash
-git config --global alias.commit-all '!git add -A && git commit'
+➜ git config --global alias.commit-all '!git add -A && git commit'
 
-git commit-all -m "Messaggio descrittivo delle modifiche"
+➜ git commit-all -m "MMessage describing changes made"
 ```
 
 Per approfondire l'argomento degli alias, consigliamo di consultare la #link("https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases")[documentazione ufficiale di Git].
@@ -242,7 +269,7 @@ Ovviamente questo comando non è sfruttabile per _correggere_ commit già pushat
 ],image("img/co-authored-commit.png"))
 
 ```bash
-git commit -m "Commit message
+➜ git commit -m "Commit message
 >
 >
 Co-authored-by: NAME <NAME@EXAMPLE.COM>
@@ -250,6 +277,21 @@ Co-authored-by: ANOTHER-NAME <ANOTHER-NAME@EXAMPLE.COM>"
 ```
 
 Per ulteriori informazionei consultare la #link("https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors")[documentazione ufficiale di GitHub].
+
+=== Visualizzare i commit
+
+Per visualizzare la cronologia dei commit, si utilizza: `git log`. Questo mostrerà i commit con il loro hash, l'autore, la data e il messaggio. Puoi anche usare opzioni come `--oneline` per una visualizzazione più compatta.
+
+```bash
+➜ git log --oneline
+4f60048 (HEAD -> main, origin/main, my-fork/main, my-fork/HEAD) Merge pull request #3 from Username/main
+7b6bc5a (my-fork/feature-1, feature-2, feature-1) Merge branch 'feature-2'
+81a7ba6 feature 2 commit
+f679048 feature 1 commit
+ff2e750 renamed
+0a0d983 ops
+8732acf Create README.md
+```
 
 == Branch
 
@@ -266,10 +308,10 @@ Questo comando crea un nuovo branch e ci sposta su di esso. Alternativamente pos
 
 Riprendendo subito il suggerimento ricevuto da GitHub nella @init-repo[Sezione] il comando: `git branch -M main` è opzionale, semplicemenete rinomina il branch principale come _main_ che lasciarlo a _master_; sta a voi scegliere se lanciare questo comando rinominandolo. Lo stesso comando può essere usato per rinominare un branch qualsiasi.
 
-=== Eliminare un Branch
+=== Eliminare un Branch in Locale
 
 Per eliminare un branch, possiamo usare il comando: `git branch -d <branch-name>`.
-#footnote([Per forzare l'eliminazione di un branch, utilizzare l'opzione `-D` al posto di `-d`])
+#footnote([Per forzare l'eliminazione di un branch, utilizzare l'opzione `-D` al posto di `-d`. Questa opzione elimina il branch a prescindere dallo stato.])
 
 === Spostarsi tra Branch
 
@@ -322,8 +364,8 @@ Visivamente il cambiamento sarebbe questo:
                 name:"main",
                 color:blue,
                 start:(0,0),
-                length:5),
-
+                length:5
+            ),
             // develop branch
             connect_nodes((1,0),(2,1),orange),
             branch(
@@ -343,6 +385,7 @@ Visivamente il cambiamento sarebbe questo:
 In modo analogo, possiamo spostarci su un commit specifico con il comando: `git switch <commit-hash>` o `git checkout <commit-hash>`. Questo comando ci permette di spostare l'HEAD su un commit specifico, tuttavia ci troveremo in uno stato chiamato _detached HEAD_.
 
 Il detached HEAD è uno stato in cui l'HEAD non punta a nessun branch, ma direttamente ad un commit. Questo significa che se creiamo un nuovo commit in questo stato, non verrà aggiunto a nessun branch e potrebbe essere perso.
+#footnote([Ogni repository ha la sua HEAD, anche i remote. Il commit a cui punta la HEAD nei remote è l'ultimo commit del branch principale (generalmente _main_); ed è anche quello che si vede nella pagina web della repository])
 
 Una rappresentazione visiva di questo stato è la seguente:
 
@@ -375,6 +418,50 @@ Una rappresentazione visiva di questo stato è la seguente:
                 color: red, 
                 start:(2,0),
                 length:3,
+                head:2,
+            )
+        )
+    ]
+]
+
+=== Spostare un Branch ad un commit specifico
+
+Fin'ora abbiamo sempre immaginato un branch come un come un'intera linea di commit, in realtà un branch non è altro che una label associata ad un commit specifico. Proprio per questo possiamo spostare un branch ad un altro commit con il comando `git branch --force <branch-name> [<new-tip-commit>]`.
+
+Per questo motivo alcuni grafici o alcuni plugin rappresentano, non solo ogni branch con colore diverso, ma anche la label del branch vicino al commit stesso. Per esempio, il grafico che abbiamo appena visto potrebbe essere rappresentato come:
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+            
+            branch( // main branch
+                name:"main",
+                indicator-xy:(5.5,1),
+                color:blue,
+                start:(0,1),
+                length:5,
+            ),
+
+            connect_nodes((3,1),(4,2),orange),
+            branch( // develop branch
+                name:"develop",
+                indicator-xy:(7.75,1.5),
+                color:orange,
+                start:(3,2),
+                length:5,
+            ),
+
+            connect_nodes((3,0),(2,1),red),
+            branch(// detached HEAD commits
+                color: red, 
+                start:(2,0),
+                length:3,
+                head:2,
             )
         )
     ]
@@ -526,7 +613,7 @@ Per unire i due branch, come prima, possiamo usare i comandi: `git switch main`,
 Come esempio, ho utilizzato una stringa diversa sulla stessa linea del file README.md in due branch diversi. Il risultato quando si tenta di fare il merge del secondo branch è il seguente:
 
 ```bash
-git merge feature-2
+➜ git merge feature-2
 Auto-merging README.md
 CONFLICT (content): Merge conflict in README.md
 Automatic merge failed; fix conflicts and then commit the result.
@@ -641,6 +728,51 @@ Per avere informazioni sui remote possiamo servirci di diversi comandi:
 
 Come si può intuire il comando suggerito da GitHub: `git remote add origin URL`, (visto nella @init-repo[Sezione]) aggiungerà l'URL come repository remote, con il nome *origin*. 
 
+=== Aggiornamento con git fetch
+
+Il comando `git fetch` scarica nuovi commit, branches e tags dai remote repository e ci permette così di confrontare le informazioni ricevute con la nostra repo locale. Tutto questo viene performato senza applicare le modifiche ai nostri branch in locale.
+
+In particolare il comando ha questa sintassi: `git fetch <remote> <refspec>`. Se lanciato senza argomenti potrebbe non aggiornare tutti i remote (o quello che ci interessa). Per sapere quali remote coinvolge l'operazione di fetch è sufficiente il comando:
+
+```bash
+➜  git fetch -v
+    POST git-upload-pack (186 bytes)
+    From https://github.com/Owner/repo
+     = [up to date]      main         -> origin/main
+     = [up to date]      feature-1    -> origin/feature-1
+     = [up to date]      feature-2    -> origin/feature-2
+```
+
+Di default, git utilizza _origin_ come remote, quindi per esempio se avvessimo un remote, come quello rappresentato qui; il comando non funzionerebbe:
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // origin main branch
+                name:"main",
+                remote: "my-fork",
+                indicator-xy: (4.75,0.5),
+                color:blue,
+                start:(0,1),
+                length:5,
+                head: 4,
+            ),
+        )
+    ]
+]
+
+Ci sono diverse soluzioni che potremmo adottare:
+
+- Ovviamente usare il comando specifico: `git fetch my-fork`
+- Applicare il fetch a tutti i remote: `git fetch --all`
+- Impostare il remote che ci interessa come default. Questo è possibile farlo sia modificando il file in `.git/config`, sia con il comando
+
 === Operazioni di Push e Pull
 
 Le operazioni di push e pull sono fondamentali per mantenere sincronizzati i repository locali e remoti. Come si evince dal nome stesso del comando, `git push` invia le modifiche locali al repository remoto, mentre `git pull` scarica le modifiche dal repository remoto.
@@ -735,7 +867,47 @@ In un caso simile, invece, è utile spostarsi sul branch main ed effettuare un _
     ]
 ]
 
-Vediamo ora un caso in cui il main sul nostro fork è fermo ad un commit precedente, rispetto al main di un altro remote.
+Ci sono molte altre opzioni applicabili ai comandi `git push` e `git pull`, oltre a `-u` che abbiamo visto nei capitoli precedenti; come: `--force` e `--force-with-lease` vi consigliamo a leggere la documentazione ufficiale@git-docs prima di utilizzarle.
+
+=== Pull Request
+
+Le Pull Request (PR) sono lo strumento con cui applichiamo modifiche in repository su cui non abbiamo permessi. Sono largamente utilizzate da parte della community e supportate da GitHub, Git Lab (Merge Request) e BitBucket.
+
+Le PR permettono di sottoporre le features sviluppate ai maintainers del progetto originale, queste saranno visibili a tutta l'organizzazione (se privata, o in alternativa a tutti). Successivamente può essere accettata, rifiutata o soggetta ad aggiustamenti.
+#footnote([Su GitHub le PR non possono essere eliminate se non contattando l'assistenza di GitHub stesso.])
+Alla stregua di un merge anche le PR possono avere dei conflitti, che devono essere risolti al fine di integrare le features desiderate.
+
+È possibile creare le Pull Requests sia attraverso l'interfaccia web (per ogni repo di GitHub abbiamo la sezione in alto dedicata), sia via CLI. Di seguito un esempio di PR via CLI con il comando gh:
+#footnote([Se ancora non è stato fatto, prima di procedere è necessario il login tramite `gh` e l'impostazione del repo di default con il comando interattivo `gh repo set-default`])
+
+```bash
+➜ gh pr create                                                                               
+? Where should we push the 'feature-1' branch?  [Use arrows to move, type to filter]
+> Username/project
+  Skip pushing the branch
+  Cancel
+```
+
+Una Pull Request è generalmente composta da: titolo, body (descrizione dettagliata), lista di commits. Di seguito il comando che abbiamo dato chi chiede appunto le prime due informazioni: 
+
+```bash
+Creating pull request for Username:feature-1 into main in Official-Owner/project
+
+? Title implemented feature-1 stuff
+? Body <Received>
+? What's next? Submit
+remote: 
+remote: 
+To https://github.com/Username/project.git
+ * [new branch]      HEAD -> feature-1
+branch 'feature-1' set up to track 'my-fork/feature-1'.
+https://github.com/Official-Owner/project/pull/1
+```
+
+Ad una PR sono inoltre associate delle etichette, personalizzate a seconda della repo,  i reviewers richiesti, i quali possono essere modificati, ed i commenti della community.
+
+
+Vediamo ora un caso completo:
 
 #align(center)[
     #scale(90%)[
@@ -746,72 +918,391 @@ Vediamo ora un caso in cui il main sul nostro fork è fermo ad un commit precede
             spacing: 4em,
             mark-scale: 50%,
 
-            branch_indicator("main", (3.75,0.5), blue),
+            branch_indicator("my-fork/main", (4.5,1.5), blue),
+            branch_indicator("origin/main", (0.75,0.5), blue),
 
             branch( // main branch
-                name:"main/origin",
-                indicator-xy: (6.8,0.5),
+                name:"main",
+                indicator-xy: (5.75,0.5),
                 color:blue,
                 start:(0,1),
-                length:7,
-                head: 6,
+                length:6,
+                head: 5,
+                commits:("","","",none,"","",)
             ),
 
-            //other branch stuff
-            connect_nodes((3,1),(4,2),teal),
-            branch( // old branch
-                name:"feature",
-                indicator-xy: (6,2.5),
+            //feature-2 branch
+            connect_nodes((3.5,0),(3,1),orange),
+            branch(
+              name: "feature-2",
+              indicator-xy: (5,0),
+              color: orange,
+              start: (2.5,0),
+              length:2
+            ),
+            connect_nodes((5,1),(4.5,0),orange),
+            
+            //feature-1 branch
+            connect_nodes((2,1),(3,2),teal),
+            branch(
+                name:"feature-1",
+                indicator-xy: (6,1.5),
                 color: teal,
-                start: (3,2),
+                start: (2,2),
                 length: 3,
             ),
+            connect_nodes((5,2),(6,1),teal),
         )
     ]
 ]
 
+In questa situazione abbiamo sviluppato due features differenti, mergiato la _feature-2_ in locale e pushato sul fork. Successivamente abbiamo completato la _feature-1_ e la abbiamo mergiata.
 
+A questo punto applichiamo tutto quello che abbiamo visto in questo capitolo: spostandoci sul branch _main_ effettuiamo un push verso il nostro fork con il comando: `git push my-fork`. 
 
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
 
+            branch_indicator("origin/main", (0.75,0.5), blue),
+            branch( // main branch
+                name:"main",
+                remote:"my-fork",
+                indicator-xy: (5.75,0.5),
+                color:blue,
+                start:(0,1),
+                length:6,
+                head: 5,
+                commits:("","","",none,"","",)
+            ),
 
-//TODO: integrate the stuff below here
+            //feature-2 branch
+            connect_nodes((3.5,0),(3,1),orange),
+            branch(
+              name: "feature-2",
+              indicator-xy: (5,0),
+              color: orange,
+              start: (2.5,0),
+              length:2
+            ),
+            connect_nodes((5,1),(4.5,0),orange),
+            
+            //feature-1 branch
+            connect_nodes((2,1),(3,2),teal),
+            branch(
+                name:"feature-1",
+                indicator-xy: (6,1.5),
+                color: teal,
+                start: (2,2),
+                length: 3,
+            ),
+            connect_nodes((5,2),(6,1),teal),
+        )
+    ]
+]
 
-Il messaggio di commit dovrebbe essere chiaro e descrivere cosa hai fatto.
+A questo punto possiamo procedere con la nostra PR, scegliendo com'è comune di rimanere sul nostro branch _main_ quando lanciamo il comando `gh pr create`; in questo modo la PR verrà proprio da quello.
+#footnote([Non è possibile avere più PR aperte provenienti dallo stesso branch dello stesso fork.])
 
-7. Visualizzare la cronologia dei commit
-Per visualizzare la cronologia dei commit, utilizza:
+Una volta che la richiesta verrà accettata, possiamo lanciare il comando `git fetch origin` per conoscere le modifiche più recenti sul remote origin e ci troveremo in questo stato:
 
-```bash
-git log
-```
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
 
-Questo mostrerà i commit con il loro hash, l'autore, la data e il messaggio. Puoi anche usare opzioni come `--oneline` per una visualizzazione più compatta:
+            branch( // remote origin
+                name:"origin/main",
+                indicator-xy: (6,-0.5),
+                color:lime,
+                start:(0,-1),
+                length:7,
+                commits:("",none,none,none,none,none,"merge pr")
+            ),
 
-```bash
-git log --oneline
-```
+            connect_nodes((1,-1),(2,1),blue),
+            branch( // main branch
+                name:"main",
+                remote:"my-fork",
+                indicator-xy: (5.75,0.5),
+                color:blue,
+                start:(1,1),
+                length:5,
+                head: 4,
+                commits:("","",none,"","")
+            ),
+            connect_nodes((6,1),(7,-1),blue,bend:-25deg),
 
-== Creare un branch
+            //feature-2 branch
+            connect_nodes((3.5,0),(3,1),orange),
+            branch(
+              name: "feature-2",
+              indicator-xy: (5,0),
+              color: orange,
+              start: (2.5,0),
+              length:2
+            ),
+            connect_nodes((5,1),(4.5,0),orange),
+            
+            //feature-1 branch
+            connect_nodes((2,1),(3,2),teal),
+            branch(
+                name:"feature-1",
+                indicator-xy: (6,1.5),
+                color: teal,
+                start: (2,2),
+                length: 3,
+            ),
+            connect_nodes((5,2),(6,1),teal),
+        )
+    ]
+]
 
-Dopo aver dato il comando:
+Questo tipo di grafico è normalissimo, se lo analizziamo, notiamo che _origin/main_ ha come primo commit l'ultimo commit in comune e come ultimo commit quello di merge. Fortunatamente per noi i maintainer del progetto per accettare la PR hanno dovuto performare questo merge. Ora non ci rimane che sincronizzare il nostro fork e la nostra repository locale.
 
-```bash
-git init
-```
-All'incirca questo è l'output che dovresti ottenere: qui git suggerisce di impostare, il nome di default del branch iniziale. Come leggiamo i nomi più comuni sono _main_ e _master_
+Sia l'interfaccia web che il tool gh permettono di sincronizzare un branch del nostro fork con la versione più recente del remote originale. Il comando per farlo è: `gh repo sync owner/cli-fork -b BRANCH-NAME`@gh-sync. Nel nostro caso il `BRANCH-NAME` sarà ovviamente _main_. 
 
-```bash
-hint: Using 'master' as the name for the initial branch. This default branch name
-hint: is subject to change. To configure the initial branch name to use in all
-hint: of your new repositories, which will suppress this warning, call:
-hint:
-hint: 	git config --global init.defaultBranch <name>
-hint:
-hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
-hint: 'development'. The just-created branch can be renamed via this command:
-hint:
-hint: 	git branch -m <name>
-```
+Per proseguire l'esempio un passo alla volta ed accertarci che tutto sia andato come ci aspettavamo, possiamo lanciare nuovamente `git fetch`:
 
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
 
-I branch sono utilizzati per lavorare su funzionalità diverse o bugfix separati dal ramo principale (`main` o `master`).
+            branch_indicator("my-fork/main", (6,-0.75), lime),
+            branch( // remote origin
+                name:"origin/main",
+                indicator-xy: (6,-0.45),
+                color:lime,
+                start:(0,-1),
+                length:7,
+                commits:("",none,none,none,none,none,"merge pr")
+            ),
+
+            connect_nodes((1,-1),(2,1),blue),
+            branch( // main branch
+                name:"main",
+                indicator-xy: (5.75,0.5),
+                color:blue,
+                start:(1,1),
+                length:5,
+                head: 4,
+                commits:("","",none,"","")
+            ),
+            connect_nodes((6,1),(7,-1),blue,bend:-25deg),
+
+            //feature-2 branch
+            connect_nodes((3.5,0),(3,1),orange),
+            branch(
+              name: "feature-2",
+              indicator-xy: (5,0),
+              color: orange,
+              start: (2.5,0),
+              length:2
+            ),
+            connect_nodes((5,1),(4.5,0),orange),
+            
+            //feature-1 branch
+            connect_nodes((2,1),(3,2),teal),
+            branch(
+                name:"feature-1",
+                indicator-xy: (6,1.5),
+                color: teal,
+                start: (2,2),
+                length: 3,
+            ),
+            connect_nodes((5,2),(6,1),teal),
+        )
+    ]
+]
+
+Se tutto è andato come ci aspettiamo l'ultima cosa rimasta da fare è aggiornare il branch _main_ in locale con `git pull` se ci siamo sopra, altrimenti specificando branch e remote.
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // remote origin
+                name:"main",
+                remote:("origin","my-fork"),
+                indicator-xy: (6,-0.5),
+                color:lime,
+                start:(0,-0.75),
+                length:7,
+                head: 6,
+                commits:("",none,none,none,none,none,"merge pr")
+            ),
+
+            connect_nodes((1,-0.75),(2,1),blue),
+            branch( // main branch
+                name:"",
+                indicator-xy: (5.75,0.5),
+                color:blue,
+                start:(1,1),
+                length:5,
+                commits:("","",none,"","")
+            ),
+            connect_nodes((6,1),(7,-0.75),blue,bend:-25deg),
+
+            //feature-2 branch
+            connect_nodes((3.5,0),(3,1),orange),
+            branch(
+              name: "feature-2",
+              indicator-xy: (5,0),
+              color: orange,
+              start: (2.5,0),
+              length:2
+            ),
+            connect_nodes((5,1),(4.5,0),orange),
+            
+            //feature-1 branch
+            connect_nodes((2,1),(3,2),teal),
+            branch(
+                name:"feature-1",
+                indicator-xy: (6,1.5),
+                color: teal,
+                start: (2,2),
+                length: 3,
+            ),
+            connect_nodes((5,2),(6,1),teal),
+        )
+    ]
+]
+
+=== Rimuovere i branch remoti
+
+Riprendendo l'esempio precedente, per pulire tutto, vorremmo elimnare i branch delle features che abbiamo utilizzato in precedenza. Supponiamo di aver pushato _feature-2_ in precedenza; la situazione che si presenta è questa:
+#footnote([Se invece un branch, creato da altri, quindi di cui non abbiamo la copia in locale, viene eliminato direttamente nel remote, basterà eseguire `git fetch --all --prune`])
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // remote origin
+                name:"main",
+                remote:("origin","my-fork"),
+                indicator-xy: (6,-0.5),
+                color:lime,
+                start:(0,-0.75),
+                length:7,
+                head:6,
+                commits:("",none,none,none,none,none,"merge pr")
+            ),
+
+            connect_nodes((1,-0.75),(2,1),blue),
+            branch( // main branch
+                name:"",
+                indicator-xy: (5.75,0.5),
+                color:blue,
+                start:(1,1),
+                length:5,
+                commits:("","",none,"","")
+            ),
+            connect_nodes((6,1),(7,-0.75),blue,bend:-25deg),
+
+            //feature-2 branch
+            connect_nodes((3.5,0),(3,1),orange),
+            branch(
+              name: "feature-2",
+              remote:("my-fork"),
+              indicator-xy: (5,0),
+              color: orange,
+              start: (2.5,0),
+              length:2
+            ),
+            connect_nodes((5,1),(4.5,0),orange),
+            
+            //feature-1 branch
+            connect_nodes((2,1),(3,2),teal),
+            branch(
+                name:"feature-1",
+                indicator-xy: (6,1.5),
+                color: teal,
+                start: (2,2),
+                length: 3,
+            ),
+            connect_nodes((5,2),(6,1),teal),
+        )
+    ]
+]
+
+Per prima cosa ci spostiamo su un branch locale diverso da quelli che vogliamo eliminare. Per eliminare il branch in remoto diamo il comando `git push my-fork -d feature-2 ` e subito dopo per elimnarlo in locale possiamo dare `git branch -d feature-1 feature-2`. Per concludere possiamo lanciare il comando `git fetch --all`.
+
+#align(center)[
+    #scale(90%)[
+        #set text(10pt)
+        #diagram(
+            node-stroke: .1em,
+            node-fill: none,
+            spacing: 4em,
+            mark-scale: 50%,
+
+            branch( // remote origin
+                name:"main",
+                remote:("origin","my-fork"),
+                indicator-xy: (6,-0.5),
+                color:lime,
+                start:(0,-0.75),
+                length:7,
+                commits:("",none,none,none,none,none,"merge pr")
+            ),
+
+            connect_nodes((1,-0.75),(2,1),blue),
+            branch( // main branch
+                name:"",
+                indicator-xy: (5.75,0.5),
+                color:blue,
+                start:(1,1),
+                length:5,
+                head: 4,
+                commits:("","",none,"","")
+            ),
+            connect_nodes((6,1),(7,-0.75),blue,bend:-25deg),
+
+            //orange branch
+            connect_nodes((3.5,0),(3,1),orange),
+            branch(
+              name: "",
+              indicator-xy: (5,0),
+              color: orange,
+              start: (2.5,0),
+              length:2
+            ),
+            connect_nodes((5,1),(4.5,0),orange),
+            
+            //teal branch
+            connect_nodes((2,1),(3,2),teal),
+            branch(
+                name:"",
+                indicator-xy: (6,1.5),
+                color: teal,
+                start: (2,2),
+                length: 3,
+            ),
+            connect_nodes((5,2),(6,1),teal),
+        )
+    ]
+]

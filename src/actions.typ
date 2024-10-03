@@ -1,6 +1,6 @@
 = GitHub Actions
 
-Le *GitHub Actions* sono una potente piattaforma di automazione integrata in GitHub che consente agli sviluppatori di automatizzare workflow direttamente nei repository di codice. Può essere utilizzata per un'ampia varietà di scopi, come la continua integrazione (CI), la distribuzione continua (CD), la gestione delle versioni, l'esecuzione di script personalizzati e altro ancora.
+Le *GitHub Actions* sono una potente piattaforma di automazione integrata in GitHub@gh-actions che consente agli sviluppatori di automatizzare workflow direttamente nei repository di codice. Può essere utilizzata per un'ampia varietà di scopi, come la continua integrazione (CI), la distribuzione continua (CD), la gestione delle versioni, l'esecuzione di script personalizzati e altro ancora.
 
 == Caratteristiche principali di GitHub Actions:
 
@@ -116,8 +116,8 @@ Il concetto di *runner* è fondamentale per capire come funzionano le GitHub Act
    - *Limiti di esecuzione*: Sono imposti limiti di tempo e di risorse, specialmente per i repository gratuiti.
    - *Inefficenti*: Ogni esecuzione il runner deve scaricare tutto il necessario, per esempio installare rust.
    
-+ *Self-hosted runners*: Sono macchine fisiche o virtuali configurate dall'utente e connesse al repository GitHub. Questi runner sono completamente personalizzabili e permettono di avere più controllo sulle risorse hardware e software disponibili.
-   
++ *Self-hosted runners*: Sono macchine fisiche o virtuali configurate dall'utente e connesse al repository GitHub@gh-runner-doc. Questi runner sono completamente personalizzabili e permettono di avere più controllo sulle risorse hardware e software disponibili.
+
    Vantaggi:
    - *Maggiore controllo*: Puoi configurare il sistema operativo, le dipendenze e le risorse hardware secondo le tue esigenze.
    - *Nessun limite di esecuzione*: Non sono soggetti alle restrizioni dei GitHub-hosted runners.
@@ -133,7 +133,8 @@ Per hostare un runner ci sono due strade principali, la prima e più semplice co
 
 === Hostare un runner (container Docker)
 
-L'alternativa a installare il runner direttamente sul sistema host è quello di isolarlo mettendolo in un container, questo complica un pò la fase di setup ma vi garantisce maggiore sicurezza a livello di esecuzione, in quanto tutto sarà eseguito in un ambiente isolato e protteto che potrete ricreare in qualsiasi momento e soprattuto in caso si corrompa. Questo pezzo della guida presuppone che siate su un sistema Linux sui cui è presente Docker e che abbiate un pò di dimestichezza con i Dockerfile, per iniziare *create una cartella* ed *entrateci con un terminale*, *create un file* chiamato esattamente `Dockerfile` senza estensione e incollateci dentro:
+L'alternativa a installare il runner direttamente sul sistema host è quello di isolarlo mettendolo in un container, questo complica un pò la fase di setup ma vi garantisce maggiore sicurezza a livello di esecuzione, in quanto tutto sarà eseguito in un ambiente isolato e protteto che potrete ricreare in qualsiasi momento e soprattuto in caso si corrompa.
+Questo pezzo della guida presuppone che siate su un sistema Linux sui cui è presente Docker e che abbiate un pò di dimestichezza con i Dockerfile, per iniziare *create una cartella* ed *entrateci con un terminale*, *create un file* chiamato esattamente `Dockerfile` senza estensione e incollateci dentro:
 ```dockerfile
 FROM debian:stable-slim
 ADD ./runner runner
@@ -154,7 +155,7 @@ ENTRYPOINT ["bash", "-c", "./start.sh"]
 ```
 questo è il file che dovete modificare per poter aggiungere i software necessari all'esecuzione delle vostre Actions.
 
-Successivamente *create un'altro file* chiamato `start.sh` con il seguente contenuto:
+Successivamente *create un'altro file* chiamato `start.sh`@docker-github-runner con il seguente contenuto:
 ```bash
 #!/bin/bash
 set -eux

@@ -7,16 +7,278 @@
 
 = Git Advanced
 
-== Log
+== Git Clean
 
-//TODO: Git reflog
+Il comando `git clean` è un comando distruttivo che, di norma, viene utilizzato per rimuovere i *file untracked*. I file eliminati dopo il suo utilizzo non saranno recuperabili tramite git; per questo necessita dell'opzione `-f` per essere eseguito.
+
+Con questo comando è possibile combinare molteplici opzioni al fine di ottenere il risultato desiderato; di seguito al lista:
+
+```bash
+➜ git clean                 # Alone will always produce this output
+    fatal: clean.requireForce is true and -f not given: refusing to clean
+➜ git clean -n              # To preview files that will be deleted
+➜ git clean --dry-run       # Same as -n
+➜ git clean -d              # Remove untracked directories in addition to untracked files
+➜ git clean -e  <expr>      # Exclude files matching the given pattern from being removed.
+➜ git clean -X              # Remove only files ignored by Git.
+➜ git clean -x              # Deletes all untracked files, including those ignored by Git.
+➜ git clean -i              # Interactive Mode
+➜ git clean -f              # Actually execute git clean
+➜ git clean -ff             # Execute git clean recursively in sub-directories
+➜ git clean -q              # Suppress the output
+```
+
+== Git Revert
+
+Sempre rimanendo in tema di annullamenti, il comando `git revert` risulta particolarmente utile. Sostanzialmente ciò che fa questo comando è il contrario di `git diff`: ovvero, passato un commit come riferimento, le differenze apportate da questo verrano applicate all'inverso. Inoltre automaticamente verrà fatto un nuovo commit.
+
+Uno dei vantaggi di `git revert` è il non riscrivere la storia, oltre al fatto di essere _safe_: è sempre possibile tornare al commit precedente e riprendere da lì, eliminando il commit di revert se inutile.
+
+Come esempio prendiamo direttamente quello fornito da Atlassian sulla pagina dedicata a #link("https://www.atlassian.com/git/tutorials/undoing-changes/git-revert")[questo comando].
+Riporto di seguito il codice per semplicità:
+
+```bash
+➜ git init .
+Initialized empty Git repository in /git_revert_test/.git/
+➜ touch demo_file
+➜ git add demo_file
+➜ git commit -am "initial commit"
+[main (root-commit) 299b15f] initial commit
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 demo_file
+➜ echo "initial content" >> demo_file
+➜ git commit -am "add new content to demo file"
+[main 3602d88] add new content to demo file
+n 1 file changed, 1 insertion(+)
+➜ echo "prepended line content" >> demo_file
+➜ git commit -am "prepend content to demo file"
+[main 86bb32e] prepend content to demo file
+ 1 file changed, 1 insertion(+)
+```
+
+Questa serie di comandi non dovrebbe sorprenderci; lo stato si presenta così:
+\
+\
+\
+#figure(
+    align(center)[
+        #scale(85%)[
+            #set text(10pt)
+            #diagram(
+                node-stroke: .1em,
+                node-fill: none,
+                spacing: 4em,
+                mark-scale: 50%,
+                
+                // main branch
+                branch(
+                    name:"main",
+                    color:blue,
+                    start:(0,0),
+                    length: 3,
+                    head:2,
+                    commits: ("initial commit",
+                              "add new content",
+                              "prepend content")
+                ),
+            )
+        ]
+    ],
+)<git-to-revert>
+
+Proseguendo con i comandi suggeriti troviamo:
+
+```bash
+➜ git revert HEAD
+[main b9cd081] Revert "prepend content to demo file" 1 file changed, 1 deletion(-)
+```
+
+Lanciando il comando probabilmente si aprirà l'editor che ci permette di modificare il messaggio di commit o lasciare quello di default. Il risultato comunque sarà:
+
+\
+\
+\
+#figure(
+    align(center)[
+        #scale(85%)[
+            #set text(10pt)
+            #diagram(
+                node-stroke: .1em,
+                node-fill: none,
+                spacing: 4em,
+                mark-scale: 50%,
+                
+                // main branch
+                branch(
+                    name:"main",
+                    color:blue,
+                    start:(0,0),
+                    length: 4,
+                    head:3,
+                    commits: ("initial commit",
+                              "add new content",
+                              "prepend content",
+                              "Revert \"prepend ...\"")
+                ),
+            )
+        ]
+    ],
+)<git-reverted>
+
+Il contenuto di demo_file è quindi:
+
+```bash
+➜ cat demo_file 
+initial content
+```
+
+Le dirette conseguenze dei vantaggi elencati prima rendono questo metodo il migliore quando si lavora in team in quanto non si rende neccessario un `git push --force`.
+
+== Git Reset
+
+`Git Reset` è un comando alquanto articolato, come i precedenti riguarda l'annullamento dei cambiamenti e si basa sul concetto dei _three trees_ (working directory, staging index e commit history). 
+Quello che fa', in generale è spostare l'HEAD al commit passato come argomento:
+
+#figure(
+    align(center)[
+        #scale(85%)[
+          #stack(
+            dir:ltr,
+            spacing:15%,
+            [
+              #set text(10pt)
+              #diagram(
+                  node-stroke: .1em,
+                  node-fill: none,
+                  spacing: 4em,
+                  mark-scale: 50%,
+                  
+                  // main branch
+                  branch(
+                      name:"main",
+                      color:blue,
+                      start:(0,0),
+                      length: 3,
+                      head:2,
+                      commits: ("","","")
+                  ),
+              )
+            ],
+            [
+              #set text(10pt)
+              #diagram(
+                  node-stroke: .1em,
+                  node-fill: none,
+                  spacing: 4em,
+                  mark-scale: 50%,
+                  
+                  // main branch
+                  branch(
+                      name:"main",
+                      color:blue,
+                      start:(0,0),
+                      length: 3,
+                      head:0,
+                      commits: ("","","")
+                  ),
+              )
+            ]
+          )
+        ]
+    ],
+)
+
+Si presenta con tre principali opzioni differenti: `--soft`, `--mixed` (default) e `--hard`. Queste determinano il suo comportamento con i commit successivi a quello a cui abbiamo spostato l'HEAD.
+
+- `git reset --soft <commit-hash>` metterà tutti i cambiamenti presenti nei commit successivi nello staged index. Questa opzione è molto utile per combinare in un solo commit tutti i cambiamenti degli ultimi n commit che non sono ancora stati pushati.
+
+- `git reset --mixed <commit-hash>` salverà tutti quei cambiamenti come unstaged
+
+- `git reset --hard <commit-hash>` scarterà tutti i cambiamenti apportati.#footnote([Il comando `git reset --hard`, senza argomenti eliminerà tutti i cambiamenti (sia staged che unstaged) attuali])
+
+== Git RefLog
+
+Lo strumento `git reflog` restituisce tutti i movimenti dell'HEAD nella repo locale, dunque in qualche modo rappresenta l'ultima possibilità di recuperare delle modifiche che abbiamo perso.
+
+Se analizziamo la situazione dopo il revert: 
+
+\
+\
+\
+#figure(
+    align(center)[
+        #scale(85%)[
+            #set text(10pt)
+            #diagram(
+                node-stroke: .1em,
+                node-fill: none,
+                spacing: 4em,
+                mark-scale: 50%,
+                
+                // main branch
+                branch(
+                    name:"main",
+                    color:blue,
+                    start:(0,0),
+                    length: 4,
+                    head:3,
+                    commits: ("initial commit",
+                              "add new content",
+                              "prepend content",
+                              "Revert \"prepend ...\"")
+                ),
+            )
+        ]
+    ],
+)
+
+e qui supponiamo di sbagliarci e dare il comando: `git reset --hard HEAD~2` (invece che `HEAD~1`); possiamo cercare nell'output di `git reflog` il commit con messaggio: _"prepend content ..."_
+
+#grid(
+  columns:(2fr,5fr),
+  column-gutter: 15%,
+  [#scale(85%)[
+    \
+    \
+    \
+    #set text(10pt)
+    #diagram(
+        node-stroke: .1em,
+        node-fill: none,
+        spacing: 4em,
+        mark-scale: 50%,
+        
+        // main branch
+        branch(
+            name:"main",
+            color:blue,
+            start:(0,0),
+            length: 2,
+            head:1,
+            commits: ("initial commit",
+                    "add new content",)
+        ),
+    )]
+  ],
+  [
+    ```bash
+    f0eb5e3 (HEAD -> main) HEAD@{0}: reset: moving to HEAD~2
+    42fcfa5 HEAD@{1}: revert: Revert "prepend content to demo file"
+    558d9f6 HEAD@{2}: commit: prepend content to demo file
+    f0eb5e3 (HEAD -> main) HEAD@{3}: commit: add new content to demo file
+    fd3f7bd HEAD@{4}: commit (initial): initial commit
+    ```
+  ]
+)
+
+Con un pizzico di fortuna, possiamo ottenere quindi l'hash del commit, che nel nostro caso è `558d9f6`.#footnote([Se si effettua un checkout su un commit non direttamente successivo rispetto al quello su cui si trova l'HEAD attualmente, si recuperano comunque i commit intermedi.])
 
 == Interactive Staging
 
 Git ci permette di fare uno staging interattivo @git-interactive-staging con il comando `git add -i` o `git add --interactive`. L'output che avremo sarà molto dettagliato riguardo i singoli files e il loro stato. Inoltre, sotto, avremo un menù con molteplici comandi:
 
 ```bash
-git add -i
+➜ git add -i
            staged     unstaged path
   1:    unchanged        +0/-1 TODO
   2:    unchanged        +1/-1 index.html
