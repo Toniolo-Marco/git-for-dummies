@@ -28,7 +28,7 @@ mkdir -p runner
 echo "unpacking runner.tgz"
 tar -zxf runner.tgz -C runner
 
-docker build -t ${IMAGE_NAME} .
+docker buildx build -t ${IMAGE_NAME} .
 
 echo "cleaning"
 rm -rf runner runner.tgz

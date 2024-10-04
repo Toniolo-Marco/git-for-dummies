@@ -2,11 +2,6 @@
 
 set -eux
 
-: $REPO_NAME
-: $REPO_OWNER
-: $RUNNER_MANAGER_TOKEN
-: $RUNNER_NAME
-
 # fetch a short-lived runner registration token for the org
 reg_token=$(curl -L \
   -X POST \
