@@ -29,10 +29,10 @@ Si consiglia di scegliere qualcuno che ha dimestichezza con git e GitHub, meglio
 
 == Tester
 Solitamente 2/3 persone, si occupano di scrivere i test che il Common Crate deve superare quando si implementa una nuova feature, oltre a scrivere i test che le applicazioni dei gruppi devono superare per verificare che stiano usando il Common Crate nel modo corretto, forzando gli standard decisi dalle specifiche.
-L'idea è che ad ogni pull request vengano eseguiti i test e in base all'esito di essi si procede con la revisione manuale.
+L'idea è che ad ogni pull request vengano eseguiti i test e in base all'esito, si procede con la revisione manuale.
 
 == Reporter
-Sono coloro che partecipano ad ogni riunione col compito di stilare un resoconto degli eventi, utile per tracciare i progressi e la direzione del progetto, basandosi su esso il WGL, stilerà il suo report da inviare al docente. Hanno inoltre il compito di scrivere le specifiche man mano che vengono corrette e definite.
+Sono coloro che partecipano ad ogni riunione col compito di stilare un resoconto degli eventi, utile per tracciare i progressi e la direzione del progetto, basandosi su esso il #wgc, stilerà il suo report da inviare al docente. Hanno inoltre il compito di scrivere le specifiche man mano che vengono corrette e definite.
 
 == Member
 Sono tutti i membri dei vari gruppi, il loro compito è partecipare all'implementazione del Common Crate, proporre feature e aprire pull requests con i cambiamenti proposti.

@@ -1,6 +1,6 @@
 = Inviter
 
-Come detto in precedenza è impensabile aggiungere manualmente tutti all'organizzazione, per questo abbiamo crato una piccola web app che utilizzando le api di GitHub consente di invitare autameticamente le persone, è distribuita sotto forma di container, quindi potete eseguirla su un server con Linux e Docker oppure, se avete un altro sistema operativo potete usare una delle release. Per iniziare recatevi alla pagina #link("https://github.com/FrostWalk/GitHub-Inviter")[GitHub] dell'inviter, qui troverete, oltre al codice e al `docker-compose.yml` da usare per hostare l'applicazione tutte le istruzioni e parametri per adattarlo alla vostra organizzazione. Vi consiglio vivamente di usare il docker-compose.yml per hostarlo, se invece volete usare uno degli eseguibili dovrete inittare manualmente le variabili d'ambiente coi config.
+Come detto in precedenza è impensabile aggiungere manualmente tutti all'organizzazione, per questo abbiamo crato una piccola web app che utilizzando le api di GitHub consente di invitare automaticamente le persone@gh-inviter, è distribuita sotto forma di container, quindi potete eseguirla su un server con Linux e Docker oppure, se avete un altro sistema operativo potete usare una delle release. Per iniziare recatevi alla pagina #link("https://github.com/FrostWalk/GitHub-Inviter")[GitHub] dell'inviter, qui troverete, oltre al codice e al `docker-compose.yml` da usare per hostare l'applicazione tutte le istruzioni e parametri per adattarlo alla vostra organizzazione. Vi consiglio vivamente di usare il docker-compose.yml per hostarlo, se invece volete usare uno degli eseguibili dovrete inittare manualmente le variabili d'ambiente coi config.
 D'ora in avanti assumeremo che avete scelto di usare Docker, aprite quindi il file `docker-compose.yml` e procedete a modificarlo come segue.
 
 == Creare il token
@@ -13,11 +13,15 @@ La vostra organizzazione probabilmente si chiamera qualcosa come `Advanced progr
 
 == Invite code
 
-Questo è l'ultimo parametro necessario, si tratta di una stringa a vostra scelta, da condividere con la classe e da inserire assieme al propio username, questo codice univoco per tutti, è una misura di sicurezza per evitare che persone a caso o bot si invitino nell'organizzazione, l'unico vincolo è che la stringa *non contenga spazi*.
+Questo parametro è opzionale ma vi consigliamo di impostarlo, si tratta dello SHA256 (encodato come stringa esadecimale) di una stringa a vostra scelta, da condividere con la classe e da inserire assieme al propio username, questo codice uguale per tutti, è una misura di sicurezza per evitare che persone a caso o bot si invitino nell'organizzazione. Per generare l'hash:
+
+- On Linux:
+  - open a terminal
+  - type: `echo -n 'invite code' | sha256sum` where #emph[invite code] is your string *leave the '*
+- On any other:
+  - go #link("https://emn178.github.io/online-tools/sha256.html")[here]
 
 
-#block(breakable: false,
-[
 == Compose e parametri opzionali
 
 A questo punto in vostro `docker-compose.yml` assomiglierà a qualcosa tipo:
@@ -27,16 +31,26 @@ services:
     container_name: github-inviter
     image: ghcr.io/frostwalk/github-inviter:latest
     environment:
-      - GITHUB_TOKEN=github_pat_11AMMG6ZI0xOGq83w37...
-      - GITHUB_ORG_NAME=Advanced-Programming-2023
-      - GITHUB_GROUP_NAME=group-members
-      - INVITE_CODE=super-secret-string
+      - GITHUB_ORG_NAME=your-org-name
+      - GITHUB_TOKEN=your-github-token
+      - GITHUB_GROUP_NAME=your-team-name
+      - INVITE_CODE_HASH=your-invite-code
+      - HTTP_PORT=80
+      # Uncomment the following lines if you want to use TLS
+      # - HTTPS_PORT=443
+      # - TLS_CERT=/path/to/your/cert.pem
+      # - TLS_KEY=/path/to/your/key.pem
     ports:
       - "80:80"
+    # Uncomment the following lines if you want to use TLS
+    #  - "443:443"
+    # volumes:
+    #  - /path/to/your/cert.pem:/path/to/your/cert.pem:ro
+    #  - /path/to/your/key.pem:/path/to/your/key.pem:ro
 ```
 non vi resta che aprire un terminale nella stessa cartella e dare i seguenti comandi: 
 
 - `docker compose up -d`
 - e poi per verificare che tutto funzioni `docker compose logs`
 - il risultato dovrebbe essere: `Server is running on http://127.0.0.1:80`
-L'ideale ora sarebbe esporre l'inviter dietro ad un reverse proxy il quale dovrebbe occuparsi di https, se invece volete esporlo direttamente vi consigliamo caldamene configurare tls tramite gli appositi parametri, seguite il README.md sulla pagina GitHub per tutte le informazioni.])
+L'ideale ora sarebbe esporre l'inviter dietro ad un reverse proxy il quale dovrebbe occuparsi di https, se invece volete esporlo direttamente vi consigliamo caldamene configurare tls tramite gli appositi parametri, seguite il README.md sulla pagina GitHub per tutte le informazioni.

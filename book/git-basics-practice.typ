@@ -9,8 +9,30 @@
 Prima di iniziare a utilizzare Git, è importante configurare il proprio nome utente e l'indirizzo email, poiché questi saranno associati ai tuoi commit.
 
 ```bash
-git config --global user.name "name"
-git config --global user.email "your@email"
+➜  git config --global user.name "name"
+➜  git config --global user.email "your@email"
+```
+
+== Configurare gh
+
+`gh` è il tool che utilizzeremo per interagire da CLI con GitHub, per configurare il nostro account utilizziamo:
+
+```bash
+➜  gh auth login
+    ? What account do you want to log into? GitHub.com
+    ? What is your preferred protocol for Git operations on this host? SSH
+    ? Generate a new SSH key to add to your GitHub account? Yes
+    ? Enter a passphrase for your new SSH key (Optional): 
+    ? Title for your SSH key: GitHub CLI
+    ? How would you like to authenticate GitHub CLI? Login with a web browser
+    
+    ! First copy your one-time code: A111-B222
+    Press Enter to open github.com in your browser... 
+    ✓ Authentication complete.
+    - gh config set -h github.com git_protocol ssh
+    ✓ Configured git protocol
+    ✓ Uploaded the SSH key to your GitHub account: /home/path/to/.ssh/key.pub
+    ✓ Logged in as GitHub-Username
 ```
 
 == Configurare gh
@@ -46,7 +68,7 @@ Solitamente, per i progetti più piccoli, come quelli individuali o quello affro
 
 Questo passaggio richiede l'aver già creato l'organizzazione alla quale apparterrà il repository. In alternativa è possibile crearla come personale e poi passare l'ownership.
 
-1. Aprite la pagina: _"https://github.com/orgs/nome-organizzazione/repositories"_
+1. Aprite la pagina: _“https://github.com/orgs/organization/repositories”_
 
 2. Premete sul pulsante: #box(fill: rgb("#29903B"),inset: 7pt, baseline: 25%, radius: 4pt)[#text(stroke: white, font: "Noto Sans", size: 7pt, weight: "light",tracking: 0.5pt)[New Repository]]
 
@@ -60,7 +82,7 @@ Questo passaggio richiede l'aver già creato l'organizzazione alla quale apparte
     git add README.md
     git commit -m "first commit"
     git branch -M main
-    git remote add origin https://github.com/Advanced-Programming-2023/test.git
+    git remote add origin https://github.com/orgs/organization/repository.git
     git push -u origin main
     ```
     
@@ -88,7 +110,7 @@ Per portare i file modificati dalla directory di lavoro all'area di staging, usi
     columns: (3fr,2fr), 
     
     [
-        Durante lo sviluppo di git, sono sviluppate diverse funzionalità molto utili e nel tempo sono state aggiunte quasi tutte al comando `git checkout`. Attualmente il team di Git, sta lavorando per separare queste funzionalità in comandi distinti.
+        Durante lo sviluppo di git, sono state sviluppate diverse funzionalità molto utili e nel tempo sono state aggiunte quasi tutte al comando `git checkout`. Attualmente il team di Git, sta lavorando per separare queste funzionalità in comandi distinti.
 
         Allo stesso anche in altri casi troveremo comandi diversi che hanno lo stesso scopo. In questo documento vedremo entrambe le versioni per completezza; tuttavia è consigliabile utilizzare i comandi più recenti.
 
@@ -166,14 +188,16 @@ Se abbiamo apportato modifiche a più file, risulterebbe molto utile avere un co
 Una volta che aggiunti i file all'area di staging, possiamo creare un commit con il comando:
 
 ```bash
-➜ git commit -m "Messaggio descrittivo delle modifiche"
+➜ git commit -m "Message describing changes made"
 ```
+Il messaggio di commit dovrebbe essere chiaro e descrivere cosa hai fatto.
+
 Il messaggio di commit dovrebbe essere chiaro e descrivere cosa hai fatto.
 
 Se si vogliono aggiungere tutti i *file modificati* alla staging area e creare un commit in un solo comando, si può usare:
 
 ```bash
-➜ git commit -am "Messaggio descrittivo delle modifiche"
+➜ git commit -am "Message describing changes made"
 ```
 
 Se si vogliono aggiungere tutti i file, anche quelli untracked, non è possibile farlo in un solo comando. Si dovrà prima aggiungere i file all'area di staging con `git add -A` e poi creare il commit, seguendo l'iter classico.
@@ -185,7 +209,7 @@ Spesso si utilizzano alias per abbreviare i comandi più lunghi, o combinare pi�
 ```bash
 ➜ git config --global alias.commit-all '!git add -A && git commit'
 
-➜ git commit-all -m "Messaggio descrittivo delle modifiche"
+➜ git commit-all -m "Message describing changes made"
 ```
 
 Per approfondire l'argomento degli alias, consigliamo di consultare la #link("https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases")[documentazione ufficiale di Git].
@@ -283,7 +307,7 @@ Per visualizzare la cronologia dei commit, si utilizza: `git log`. Questo mostre
 
 ```bash
 ➜ git log --oneline
-4f60048 (HEAD -> main, origin/main, my-fork/main, my-fork/HEAD) Merge pull request #3 from Toniolo-Marco/main
+4f60048 (HEAD -> main, origin/main, my-fork/main, my-fork/HEAD) Merge pull request #3 from Username/main
 7b6bc5a (my-fork/feature-1, feature-2, feature-1) Merge branch 'feature-2'
 81a7ba6 feature 2 commit
 f679048 feature 1 commit

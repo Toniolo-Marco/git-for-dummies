@@ -128,11 +128,11 @@ Il flusso di lavoro più comune è il seguente:
             )
         ]
     ],
-    caption: [Simple Workflow Diagram]
+    caption: [Workflow Diagram]
 )<workflow>
 
 
-Al branch develop vengono mergiate tutte le funzionalità sviluppate, successivamente quando si è sicuri che il codice sia stabile e pronto per la produzione, si può fare il merge di develop in main.
+A _develop_ vengono mergiate tutte le funzionalità sviluppate, successivamente quando si è sicuri che il codice sia stabile e pronto per la produzione, si può fare il merge di develop in _main_.
 
 == Remote Repository <remote>
 
