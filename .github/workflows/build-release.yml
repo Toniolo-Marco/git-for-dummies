@@ -1,53 +1,65 @@
 name: Build & Release
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - "src/**"
-  workflow_dispatch:
+    push:
+        branches: ["main"]
+        paths:
+            - "src/**"
+    workflow_dispatch:
 
 jobs:
-  Build_And_Release:
-    timeout-minutes: 720
-    runs-on: [self-hosted, typst]
-    steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
+    Build_And_Release:
+        timeout-minutes: 720
+        runs-on: [self-hosted, typst]
+        steps:
+            - name: Checkout
+              id: checkout
+              uses: actions/checkout@v4
 
-      - name: Compile Typst document
-        id: compile
-        shell: bash
-        run: |
-          # compile the main file
-          typst update
-          typst compile src/main.typ --root=./ --font-path=${{ github.workspace }}/src/fonts/noto-sans
+            - name: Typst Update
+              id: update
+              shell: bash
+              run: |
+                  # update the typst runner
+                  typst update
 
-      - name: Delete previous release
-        id: deletePreviuosRelease
-        if: steps.compile.outcome == 'success'
-        continue-on-error: true
-        shell: bash
-        run: |
-          # Get the latest release ID
-          LATEST_RELEASE_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r '.id')
+            - name: Compile Typst Book
+              id: compile
+              shell: bash
+              run: |
+                  # compile the main file
+                  typst compile book/main.typ -o ./git-for-dummies-book.pdf --root=./ --font-path=${{ github.workspace }}/book/fonts/noto-sans
 
-          # Delete the latest release
-          if [ "$LATEST_RELEASE_ID" != "null" ]; then
-            curl -s -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/$LATEST_RELEASE_ID"
-          else
-            echo "No previous release found."
-          fi
+            - name: Compile Typst Slides
+              id: compile-slides
+              shell: bash
+              run: |
+                  # compile the slides file
+                  typst compile slides/main.typ -o ./git-for-dummies-slides.pdf --root=./ --font-path=${{ github.workspace }}/slides/fonts/noto-sans
 
-      - name: Publish Release
-        id: release
-        if: steps.compile.outcome == 'success'
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ github.workspace }}/src/main.pdf
-          asset_name: Git-for-Dummies.pdf
-          overwrite: true
-          body: "Brief introduction to using git, GitHub and managing an organization for Professor Patrignani's Advanced Programming course"
-          release_name: "Git for Dummies"
+            - name: Delete previous release
+              id: deletePreviuosRelease
+              if: steps.compile.outcome == 'success'
+              continue-on-error: true
+              shell: bash
+              run: |
+                  # Get the latest release ID
+                  LATEST_RELEASE_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r '.id')
+
+                  # Delete the latest release
+                  if [ "$LATEST_RELEASE_ID" != "null" ]; then
+                    curl -s -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/$LATEST_RELEASE_ID"
+                  else
+                    echo "No previous release found."
+                  fi
+
+            - name: Publish Release
+              id: release
+              if: steps.compile.outcome == 'success'
+              uses: svenstaro/upload-release-action@v2
+              with:
+                  repo_token: ${{ secrets.GITHUB_TOKEN }}
+                  file: ${{ github.workspace }}/*.pdf
+                  overwrite: true
+                  body: "Brief introduction to using git, GitHub and managing an organization for Professor Patrignani's Advanced Programming course"
+                  release_name: "Git for Dummies"
