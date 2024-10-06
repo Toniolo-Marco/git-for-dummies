@@ -2,34 +2,103 @@ git-docs:
     type: Web
     title: Git Documentation
     url: https://git-scm.com/docs
+    publisher: Git
 
 git-interactive-staging:
     type: Chapter
     title: Interactive Staging
-    author: 
-      - Scott Chacon
-      - Ben Straub
+    author:
+        - Scott Chacon
+        - Ben Straub
     url: https://git-scm.com/book/en/v2/Git-Tools-Interactive-Staging
     parent:
         type: Book
         title: Pro Git
+        publisher: Apress
+        url: https://git-scm.com/book/en/v2
+        author:
+            - Scott Chacon
+            - Ben Straub
 
 git-stash-tutorial:
-  type: Article
-  title: Git Stash
-  url: https://www.atlassian.com/git/tutorials/saving-changes/git-stash
-  parent:
-    type: Web
-    title: Git Tutorials
-    publisher: Atlassian
-    url: https://www.atlassian.com/git/tutorials
+    type: Article
+    title: Git Stash
+    url: https://www.atlassian.com/git/tutorials/saving-changes/git-stash
+    parent:
+        type: Web
+        title: Git Tutorials
+        publisher: Atlassian
+        url: https://www.atlassian.com/git/tutorials
 
 gh-sync:
-  type: Article
-  title: Syncing a fork branch with the GitHub CLI
-  url: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork#syncing-a-fork-branch-with-the-github-cli
-  parent:
+    type: Article
+    title: Syncing a fork branch with the GitHub CLI
+    url: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork#syncing-a-fork-branch-with-the-github-cli
+    parent:
+        type: Web
+        title: Syncing a fork
+        publisher: GitHub
+        url: https://cli.github.com/manual/gh_repo_sync
+
+git-contribution:
+    type: Chapter
+    title: GitHub - Contributing to a Project
+    url: https://git-scm.com/book/ms/v2/GitHub-Contributing-to-a-Project
+    parent:
+        type: Book
+        title: Pro Git
+        publisher: Apress
+        url: https://git-scm.com/book/en/v2
+        author:
+            - Scott Chacon
+            - Ben Straub
+
+gh-orgs:
     type: Web
-    title: Syncing a fork
+    title: About organizations
+    url: https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/about-organizations
     publisher: GitHub
-    url: https://cli.github.com/manual/gh_repo_sync
+
+gh-groups:
+    type: Web
+    title: Creating a team
+    url: https://docs.github.com/en/organizations/organizing-members-into-teams/creating-a-team
+    publisher: GitHub
+
+git-archive:
+    type: Web
+    title: Archiving repositories
+    url: https://docs.github.com/en/repositories/archiving-a-github-repository/archiving-repositories
+    publisher: GitHub
+
+gh-inviter:
+    type: Article
+    title: Automated GitHub Organization Invites
+    url: https://medium.com/code-applied-to-life/automated-github-organization-invites-3e940aa27040
+    author:
+        - Thai Pangsakulyanont
+    publisher: "Medium: Code, Applied to Life"
+
+gh-actions:
+    type: Web
+    title: Understanding GitHub Actions
+    url: https://docs.github.com/en/actions/about-github-actions/understanding-github-actions
+    publisher: GitHub
+
+gh-runner-doc:
+    type: Web
+    title: About self-hosted runners
+    url: https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners
+    publisher: GitHub
+
+docker-github-runner:
+    type: Repository
+    title: Script to add and remove a runner from GitHub
+    author:
+        - Marcel Lupo
+    url: https://github.com/Pwd9000-ML/docker-github-runner-linux/blob/master/scripts/start.sh
+    parent:
+        type: Web
+        title: Create a Docker based Self Hosted GitHub runner Linux container
+        publisher: Dev
+        url: https://dev.to/pwd9000/create-a-docker-based-self-hosted-github-runner-linux-container-48dh

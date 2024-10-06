@@ -5,16 +5,16 @@
 #import "@preview/fletcher:0.5.1" as fletcher: node, edge
 #let fletcher-diagram = touying-reducer.with(reduce: fletcher.diagram, cover: fletcher.hide)
 
-#import "/src/components/gh-button.typ": gh_button
-#import "/src/components/git-graph.typ": branch_indicator, commit_node, connect_nodes, branch
-#import "/src/components/utils.typ": rainbow
-#import "/src/components/thmbox.typ": custom-box, alert-box
+#import "/slides/components/gh-button.typ": gh_button
+#import "/slides/components/git-graph.typ": branch_indicator, commit_node, connect_nodes, branch
+#import "/slides/components/utils.typ": rainbow
+#import "/slides/components/thmbox.typ": custom-box, alert-box
 
 
 #grid(columns: 2, column-gutter: 5%,
 [So far* we have worked only on the local repository*, addressing scenarios without considering the remote repository. In this chapter we will make up for this shortcoming.],
 
-image("/src/img/meme/git-remote-add.png")
+image("/slides/img/meme/git-remote-add.png")
 
 )
 
@@ -214,7 +214,7 @@ In a similar case, however, it is useful to move to the main branch and perform 
 There are many other options applicable to the `git push` and `git pull` commands, in addition to `-u` which we have seen in the previous chapters; such as: `--force` and `--force-with-lease` we advise you to read the official documentation@git-docs before using them.
 ]
 #align(center,
-image("/src/img/meme/git-help.png", width: 40%)
+image("/slides/img/meme/git-help.png", width: 40%)
 )
 ---
 

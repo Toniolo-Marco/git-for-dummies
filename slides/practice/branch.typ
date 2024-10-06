@@ -141,7 +141,7 @@ custom-box(title:"Detached Head")[
 ],
 
 grid.cell(rowspan: 2,
-image("/src/img/meme/detached-head.png", width: 70%)),
+image("/slides/img/meme/detached-head.png", width: 70%)),
 
 alert-box(title:"Warning")[
     This means that if we create a new commit in this state, it will not be added to any branch and may be lost.

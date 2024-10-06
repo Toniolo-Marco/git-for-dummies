@@ -13,7 +13,7 @@
 
 #grid(columns:2, column-gutter:5%,
 
-image("/src/img/meme/merge-conflicts.png", width:90%),
+image("/slides/img/meme/merge-conflicts.png", width:90%),
 
 [To *combine functionality implemented in 2 different branches*, there are several techniques; in this section we will only cover the classic _merge method_, as it is the most _safe_ and _simple_.
 
@@ -196,7 +196,7 @@ Automatic merge failed; fix conflicts and then commit the result.
 Depending on the editor we use, files containing conflicts will or will not be highlighted. However each file with conflict on opening will show something similar:
 
 #align(center)[
-    #image("/src/img/file-with-merge-conflicts.png")
+    #image("/slides/img/file-with-merge-conflicts.png")
 ]
 
 ---

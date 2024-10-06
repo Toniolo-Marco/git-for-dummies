@@ -19,6 +19,6 @@ Generally we use the command `git add -A` or `git add .` to add all modified fil
 Similarly, we can add all files respecting a Regex with `git add <regex>`; for example: `git add Documentation/\*.txt`, will add all `.txt` files in the `Documentation` folder.
 ],
 
-image("/src/img/meme/git-add.png",width: 70%)
+image("/slides/img/meme/git-add.png",width: 70%)
 
 )

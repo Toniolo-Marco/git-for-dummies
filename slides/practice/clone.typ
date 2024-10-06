@@ -10,7 +10,7 @@
 
 #grid(columns: 2, column-gutter: 10%,
 
-image("/src/img/meme/git-clone.png"),
+image("/slides/img/meme/git-clone.png"),
 
 [In case the project already exists simply: move to the folder and clone the repository: `git clone <url-repository>`. This way we would have a copy of the remote repository on our machine.]
 

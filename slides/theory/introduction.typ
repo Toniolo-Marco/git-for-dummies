@@ -16,7 +16,7 @@ It is an *essential* tool *for coordinating work between several developers*, ke
 You will no longer have to spam ctrl+Z to go back to previous versions.],
 
 grid.cell(align: center,
-image("/src/img/meme/whats-git.jpg", width: 70%),
+image("/slides/img/meme/whats-git.jpg", width: 70%),
 )
 )
 

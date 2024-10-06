@@ -147,24 +147,24 @@ Your branch is up to date with 'origin/git-basics'. # Last commit is the same as
 
 Changes to be committed:                            # List of staged files
   (use "git restore --staged <file>..." to unstage)
-        modified:   src/git-basics-theory.typ
+        modified:   book/git-basics-theory.typ
 
 Changes not staged for commit:                      # List of not staged files
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
-        modified:   src/git-basics-practice.typ
+        modified:   book/git-basics-practice.typ
 
 Untracked files:                                    # List of Untracked files
   (use "git add <file>..." to include in what will be committed)
-        src/untracked-file.ops
+        book/untracked-file.ops
 ```
 
 In modo simile con `git checkout` possiamo avere un riassunto grossolano; in output vedremo solo i file modificati, senza ulteriori dettagli e non verranno mostrati i file *untracked*.
 
 ```bash
 ➜ git checkout
-M       src/git-basics-practice.typ                 # Show only modified files
-M       src/git-basics-theory.typ                   #
+M       book/git-basics-practice.typ                 # Show only modified files
+M       book/git-basics-theory.typ                   #
 Your branch is up to date with 'origin/git-basics'. #
 ```
 
@@ -645,7 +645,7 @@ Automatic merge failed; fix conflicts and then commit the result.
 A seconda dell'editor che utilizziamo i file contenenti i conflitti saranno o meno evidenziati. Comunque ogni file con conflitto all'apertura mostrerà qualcosa di simile:
 
 #align(center)[
-    #image("/src/img/file-with-merge-conflicts.png")
+    #image("/book/img/file-with-merge-conflicts.png")
 ]
 
 A questo punto non ci rimane che rimuovere il cambiamento che non vogliamo mantenere o in alternativa combinare entrambi. Proseguiamo salvando il file, chiudendolo e assicurandoci che sia nella staging area con il comando: `git add ...`. Ora possiamo lanciare il comando `git commit` (che assegnerà il messaggio di default: _"Merge branch feature-2"_). Ora il nostro albero sarà:

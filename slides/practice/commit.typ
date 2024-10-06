@@ -104,7 +104,7 @@ grid.cell(align: bottom)[
   - Once the file is saved and closed, the commit will be edited.
 ],
 
-image("/src/img/meme/git-commit-message.png")
+image("/slides/img/meme/git-commit-message.png")
 
 )
   

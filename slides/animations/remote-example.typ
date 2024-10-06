@@ -5,9 +5,9 @@
 #import "@preview/ctheorems:1.1.2": *
 #import "@preview/numbly:0.1.0": numbly
 
-#import "/src/components/code-blocks.typ": code-block, window-titlebar
-#import "/src/components/utils.typ": n_pagebreak
-#import "/src/components/git-graph.typ": branch_indicator, commit_node, connect_nodes, branch
+#import "/slides/components/code-blocks.typ": code-block, window-titlebar
+#import "/slides/components/utils.typ": n_pagebreak
+#import "/slides/components/git-graph.typ": branch_indicator, commit_node, connect_nodes, branch
 
 #let fletcher-diagram = touying-reducer.with(reduce: fletcher.diagram, cover: fletcher.hide)
 
