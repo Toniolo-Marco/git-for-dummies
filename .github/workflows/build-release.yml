@@ -28,14 +28,14 @@ jobs:
               shell: bash
               run: |
                   # compile the main file
-                  typst compile book/main.typ -o ./git-for-dummies-book.pdf --root=./ --font-path=${{ github.workspace }}/book/fonts/noto-sans
+                  typst compile book/main.typ --root=./ --font-path=${{ github.workspace }}/book/fonts/noto-sans git-for-dummies-book.pdf
 
             - name: Compile Typst Slides
               id: compile-slides
               shell: bash
               run: |
                   # compile the slides file
-                  typst compile slides/main.typ -o ./git-for-dummies-slides.pdf --root=./ --font-path=${{ github.workspace }}/slides/fonts/noto-sans
+                  typst compile slides/main.typ --root=./ --font-path=${{ github.workspace }}/slides/fonts/noto-sans git-for-dummies-slides.pdf
 
             - name: Delete previous release
               id: deletePreviuosRelease
