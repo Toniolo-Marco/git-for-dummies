@@ -1,0 +1,45 @@
+git-docs:
+    type: Web
+    title: Git Documentation
+    url: https://git-scm.com/docs
+
+git-changes:  
+  type: Web
+  title: Recording Changes to the Repository
+  url: https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository
+
+git-alias:
+  type: Web
+  title: Git Aliases
+  url: https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases
+  
+git-interactive-staging:
+    type: Chapter
+    title: Interactive Staging
+    author: 
+      - Scott Chacon
+      - Ben Straub
+    url: https://git-scm.com/book/en/v2/Git-Tools-Interactive-Staging
+    parent:
+        type: Book
+        title: Pro Git
+
+git-stash-tutorial:
+  type: Article
+  title: Git Stash
+  url: https://www.atlassian.com/git/tutorials/saving-changes/git-stash
+  parent:
+    type: Web
+    title: Git Tutorials
+    publisher: Atlassian
+    url: https://www.atlassian.com/git/tutorials
+
+gh-sync:
+  type: Article
+  title: Syncing a fork branch with the GitHub CLI
+  url: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork#syncing-a-fork-branch-with-the-github-cli
+  parent:
+    type: Web
+    title: Syncing a fork
+    publisher: GitHub
+    url: https://cli.github.com/manual/gh_repo_sync
