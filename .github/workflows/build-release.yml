@@ -28,7 +28,7 @@ jobs:
                   # compile the main file
                   typst compile book/main.typ --root=./ --font-path=${{ github.workspace }}/book/fonts/noto-sans ${{ github.workspace }}/git-for-dummies-slides.pdf &
                   typst compile slides/slides.typ --root=./ --font-path=${{ github.workspace }}/slides/fonts/noto-sans ${{ github.workspace }}/git-for-dummies-book.pdf &
-                  wait && ls
+                  wait
 
             - name: Delete previous release
               id: deletePreviuosRelease
@@ -53,8 +53,7 @@ jobs:
               with:
                   repo_token: ${{ secrets.GITHUB_TOKEN }}
                   file: |
-                      ${{ github.workspace }}/git-for-dummies-book.pdf
-                      ${{ github.workspace }}/git-for-dummies-slides.pdf
+                      ${{ github.workspace }}/*.pdf
                   file_glob: true
                   overwrite: true
                   body: "Brief introduction to using git, GitHub and managing an organization for Professor Patrignani's Advanced Programming course"
