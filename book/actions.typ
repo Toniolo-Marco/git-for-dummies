@@ -25,43 +25,64 @@ Immagina di avere un progetto Rust e di voler automatizzare i test con GitHub Ac
 Ecco un esempio di file di configurazione:
 
 ```yaml
-name: Test Rust Library
+name: Test Pull Request
 
-# Il workflow viene eseguito ogni volta che si fa un push o una pull request sul branch main
 on:
-  push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - main
-
-# Definizione dei job da eseguire
+    branches: [ "main" ]
+    paths:
+      - src/**
 jobs:
-  build:
-    # Esegui il job su ubuntu (hostato da GitHub)
-    runs-on: ubuntu-latest
+  TestPullRequest:
+    runs-on: [ self-hosted, linux, rust ]
 
     steps:
-      # Step 1: Checkout del repository
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      # Step 2: Imposta la versione di Rust desiderata
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
+      - name: Update local toolchain
+        id: updateToolchain
+        run: |
+          rustup update
+
+      - name: Toolchain info
+        id: info
+        run: |
+          echo "# Rust toolchain info" >> $GITHUB_STEP_SUMMARY
+          cargo --version --verbose >> $GITHUB_STEP_SUMMARY
+          rustc --version >> $GITHUB_STEP_SUMMARY
+          cargo clippy --version >> $GITHUB_STEP_SUMMARY
+          rustfmt --version >> $GITHUB_STEP_SUMMARY
+
+      - name: Check RustFmt
+        id: checkFmt
+        continue-on-error: true
+        run: cargo fmt --all -- --check
+
+      - name: Comment pull request
+        id: commentPr
+        if: steps.checkFmt.outcome == 'failure'
+        uses: ntsd/auto-request-changes-action@v2
         with:
-          toolchain: ${{ matrix.rust }}
-          override: true
+          comment-body: "The code is not formatted correctly, run `cargo fmt --all`"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 3: Esegui i test
-      - name: Run tests
-        run: cargo test --verbose
+      - name: Check Clippy
+        uses: actions-rs/clippy-check@v1
+        continue-on-error: true
+        id: checkClippy
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
+
+      - name: Run Cargo Tests
+        run: |
+          cargo test --all --no-fail-fast --color always
 ```
-
+#pagebreak()
 == Spiegazione del workflow:
 
-- *on*: Definisce gli eventi che attivano il workflow. In questo caso, viene attivato su ogni `push` e `pull_request` nel branch `main`.
+- *on*: Definisce gli eventi che attivano il workflow. In questo caso, viene attivato su ogni `push` e `pull_request` nel branch `main` solo se i file all'interno di *src* vengono modificati.
 - *jobs*: Definisce i job da eseguire. In questo caso, c'è un solo job chiamato `build`.
 - *strategy*: Usa una strategia matrix per eseguire il workflow su ubuntu, ultima versione usando Rust stable.
 - *steps*: Elenca i singoli step del workflow:
@@ -141,8 +162,8 @@ ADD ./runner runner
 WORKDIR /runner
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["bash", "-c"]
-# Add the software to be installed here (before ' \')
-RUN ./bin/installdependencies.sh && apt-get install -y jq curl git \ 
+# Add the software to be installed here (after 'curl' and before ' \')
+RUN ./bin/installdependencies.sh && apt-get install -y curl \ 
     && apt-get autoclean && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 ADD --chmod=754 ./start.sh start.sh

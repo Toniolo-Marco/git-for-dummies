@@ -35,28 +35,6 @@ Prima di iniziare a utilizzare Git, è importante configurare il proprio nome ut
     ✓ Logged in as GitHub-Username
 ```
 
-== Configurare gh
-
-`gh` è il tool che utilizzeremo per interagire da CLI con GitHub, per configurare il nostro account utilizziamo:
-
-```bash
-➜  gh auth login
-    ? What account do you want to log into? GitHub.com
-    ? What is your preferred protocol for Git operations on this host? SSH
-    ? Generate a new SSH key to add to your GitHub account? Yes
-    ? Enter a passphrase for your new SSH key (Optional): 
-    ? Title for your SSH key: GitHub CLI
-    ? How would you like to authenticate GitHub CLI? Login with a web browser
-    
-    ! First copy your one-time code: A111-B222
-    Press Enter to open github.com in your browser... 
-    ✓ Authentication complete.
-    - gh config set -h github.com git_protocol ssh
-    ✓ Configured git protocol
-    ✓ Uploaded the SSH key to your GitHub account: /home/path/to/.ssh/key.pub
-    ✓ Logged in as GitHub-Username
-```
-
 == Inizializzare un nuovo repository <init-repo>
 
 Per creare un nuovo progetto con Git, spostati nella directory del tuo progetto e inizializza un repository con il comando 
@@ -147,24 +125,24 @@ Your branch is up to date with 'origin/git-basics'. # Last commit is the same as
 
 Changes to be committed:                            # List of staged files
   (use "git restore --staged <file>..." to unstage)
-        modified:   book/git-basics-theory.typ
+        modified:   src/git-basics-theory.typ
 
 Changes not staged for commit:                      # List of not staged files
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
-        modified:   book/git-basics-practice.typ
+        modified:   src/git-basics-practice.typ
 
 Untracked files:                                    # List of Untracked files
   (use "git add <file>..." to include in what will be committed)
-        book/untracked-file.ops
+        src/untracked-file.ops
 ```
 
 In modo simile con `git checkout` possiamo avere un riassunto grossolano; in output vedremo solo i file modificati, senza ulteriori dettagli e non verranno mostrati i file *untracked*.
 
 ```bash
 ➜ git checkout
-M       book/git-basics-practice.typ                 # Show only modified files
-M       book/git-basics-theory.typ                   #
+M       src/git-basics-practice.typ                 # Show only modified files
+M       src/git-basics-theory.typ                   #
 Your branch is up to date with 'origin/git-basics'. #
 ```
 
@@ -190,7 +168,6 @@ Una volta che aggiunti i file all'area di staging, possiamo creare un commit con
 ```bash
 ➜ git commit -m "Message describing changes made"
 ```
-Il messaggio di commit dovrebbe essere chiaro e descrivere cosa hai fatto.
 
 Il messaggio di commit dovrebbe essere chiaro e descrivere cosa hai fatto.
 
@@ -209,7 +186,7 @@ Spesso si utilizzano alias per abbreviare i comandi più lunghi, o combinare pi�
 ```bash
 ➜ git config --global alias.commit-all '!git add -A && git commit'
 
-➜ git commit-all -m "Message describing changes made"
+➜ git commit-all -m "MMessage describing changes made"
 ```
 
 Per approfondire l'argomento degli alias, consigliamo di consultare la #link("https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases")[documentazione ufficiale di Git].
@@ -645,7 +622,7 @@ Automatic merge failed; fix conflicts and then commit the result.
 A seconda dell'editor che utilizziamo i file contenenti i conflitti saranno o meno evidenziati. Comunque ogni file con conflitto all'apertura mostrerà qualcosa di simile:
 
 #align(center)[
-    #image("/book/img/file-with-merge-conflicts.png")
+    #image("/src/img/file-with-merge-conflicts.png")
 ]
 
 A questo punto non ci rimane che rimuovere il cambiamento che non vogliamo mantenere o in alternativa combinare entrambi. Proseguiamo salvando il file, chiudendolo e assicurandoci che sia nella staging area con il comando: `git add ...`. Ora possiamo lanciare il comando `git commit` (che assegnerà il messaggio di default: _"Merge branch feature-2"_). Ora il nostro albero sarà:
