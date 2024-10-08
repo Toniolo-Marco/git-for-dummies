@@ -54,7 +54,7 @@
     author: [Toniolo Marco],
     date: datetime.today(),
     institution: [Università degli Studi di Trento],
-    logo: emoji.crab,
+    // logo: emoji.crab,
   ),
 )
 #set text(size: 18pt)

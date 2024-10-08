@@ -4,7 +4,8 @@ on:
     push:
         branches: ["main"]
         paths:
-          - src/**    
+          - book/**
+          - slides/**
     workflow_dispatch:
 
 jobs:
@@ -28,8 +29,8 @@ jobs:
               shell: bash
               run: |
                   # compile the main file
-                  typst compile book/main.typ --root=./ --font-path=${{ github.workspace }}/book/fonts/noto-sans ${{ github.workspace }}/git-for-dummies-slides.pdf &
-                  typst compile slides/slides.typ --root=./ --font-path=${{ github.workspace }}/slides/fonts/noto-sans ${{ github.workspace }}/git-for-dummies-book.pdf &
+                  typst compile slides/main.typ --root=./ --font-path=${{ github.workspace }}/book/fonts/noto-sans ${{ github.workspace }}/git-for-dummies-slides.pdf &
+                  typst compile book/main.typ --root=./ --font-path=${{ github.workspace }}/slides/fonts/noto-sans ${{ github.workspace }}/git-for-dummies-book.pdf &
                   wait
 
             - name: Delete previous release
